@@ -1,0 +1,24 @@
+[
+  {
+    "id": "1",
+    "title": "The Future of Technology",
+    "summary": "Exploring upcoming trends in the tech industry.",
+    "content": "The tech industry is evolving at a rapid pace, with new innovations appearing every day. From advancements in artificial intelligence to breakthroughs in quantum computing, the future is bright for technology enthusiasts. In this article, we explore the potential impact of these technologies on our lives and the broader society...more content...",
+    "category": "Technology",
+    "url": "http://localhost:3000/api/articles/1.json",
+    "publishedAt": "2023-11-25",
+    "imageUrl": "http://localhost:3000/images/future-of-technology.jpg"
+  },
+  {
+    "id": "2",
+    "title": "Global Economic Shifts",
+    "summary": "A deep dive into global economic patterns and predictions.",
+    "content": "Global economies are constantly shifting, influenced by a variety of factors including political changes, emerging markets, and technological advancements. This article delves into the patterns observed in recent years and offers insights into what can be expected in the near future.",
+    "category": "Finance",
+    "url": "http://localhost:3000/api/articles/2.json",
+    "publishedAt": "2023-11-24",
+    "imageUrl": "http://localhost:3000/images/global-economic-shifts.jpg"
+  }
+    
+  ]
+  
