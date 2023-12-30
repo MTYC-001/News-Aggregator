@@ -2,22 +2,23 @@ import React, { useEffect, useState } from 'react';
 import { jsPDF } from 'jspdf';
 import '../app/globals.css';
 import Sidebar from '../components/Sidebar';
-import ArticleModal from '../components/ArticleModal'; // Ensure you have this component
+import ArticleModal from '../components/ArticleModal';
 import Image from 'next/image';
+import expandArrows from '../../images/expand-arrows.png'
+import compactArrows from '../../images/compact-arrows.png'
 const CollectionsPage = () => {
   const [userCollection, setUserCollection] = useState([]);
   const [articleTags, setArticleTags] = useState({});
   const [showTagInput, setShowTagInput] = useState({});
   const [selectedArticle, setSelectedArticle] = useState(null);
+  const [displayMode, setDisplayMode] = useState('compact'); // 'compact' or 'expanded'
 
   useEffect(() => {
     const collectionData = localStorage.getItem('userCollection');
     const tagsData = localStorage.getItem('articleTags');
-
     if (collectionData) {
       setUserCollection(JSON.parse(collectionData));
     }
-
     if (tagsData) {
       setArticleTags(JSON.parse(tagsData));
     }
@@ -44,19 +45,6 @@ const CollectionsPage = () => {
     setShowTagInput({ ...showTagInput, [articleId]: true });
   };
 
-  const exportToPDF = (article) => {
-    const doc = new jsPDF();
-    
-    doc.setFontSize(20);
-    doc.text(article.title, 10, 10);
-    doc.setFontSize(16);
-    doc.text(`Published at: ${article.publishedAt}`, 10, 20);
-    doc.setFontSize(12);
-    doc.text(article.content, 10, 30);
-
-    doc.save(`${article.title}.pdf`);
-  };
-
   const handleReadMore = (article) => {
     setSelectedArticle(article);
   };
@@ -70,24 +58,58 @@ const CollectionsPage = () => {
       <Sidebar currentPage="collections" />
 
       <div className="flex-grow p-4 ml-64">
-        <h1 className="text-3xl font-semibold mb-6">User&apos;s Collection</h1>
+        <h1 className="text-3xl font-semibold mb-6">User's Collection</h1>
+
+        <div className="mode-selector mb-4 px-16">
+          <button onClick={() => setDisplayMode('compact')} className={displayMode === 'compact' ? 'active' : ''}>
+            Compact
+            <Image src={compactArrows} alt="Compact" style={{ width: '20px', marginRight: '5px' }}></Image>
+          </button>
+          <button onClick={() => setDisplayMode('expanded')} className={displayMode === 'expanded' ? 'active' : ''}>
+            Expand
+            <Image src={expandArrows} alt="Expand" style={{ width: '20px', marginRight: '5px' }}></Image>
+          </button>
+        </div>
+
         {userCollection.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className={`grid gap-4 ${displayMode === 'expanded' ? 'grid-cols-1' : 'md:grid-cols-2 lg:grid-cols-3'}`}>
             {userCollection.map((article) => (
               <div key={article.id} className="bg-white rounded-lg overflow-hidden shadow-lg">
-                <Image src={article.imageUrl} alt={article.title} className="w-full h-48 object-cover" />
+                {displayMode === 'expanded' && (
+                  <div className="p-4">
+                    <h2 className="text-2xl font-bold mb-2">{article.title}</h2>
+                  </div>
+                )}
+                <Image
+                  src={article.imageUrl}
+                  alt={article.title}
+                  width={500}
+                  height={300}
+                  layout="responsive"
+                />
+
                 <div className="p-4">
-                  <h2 className="text-2xl font-bold mb-2">{article.title}</h2>
+                  {displayMode === 'compact' && (
+                    <h2 className="text-2xl font-bold mb-2">{article.title}</h2>
+                  )}
+                  {displayMode === 'expanded' && (
+                    <>
+                      <p>{article.content}</p>
+                      {/* Additional details for expanded view */}
+                    </>
+                  )}
                   <div className="mb-2 flex flex-wrap">
                     {articleTags[article.id]?.map(tag => (
                       <span key={tag} className="mr-2 mb-2 text-sm bg-gray-200 rounded-full px-3 py-1">{tag}</span>
                     ))}
-                    <button 
-                      onClick={() => handleShowTagInput(article.id)}
-                      className="text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
-                    >
-                      [+] Add Tag
-                    </button>
+                    {displayMode === 'expanded' && (
+                      <button 
+                        onClick={() => handleShowTagInput(article.id)}
+                        className="text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+                      >
+                        [+] Add Tag
+                      </button>
+                    )}
                   </div>
                   {showTagInput[article.id] && (
                     <input
@@ -109,33 +131,26 @@ const CollectionsPage = () => {
                     >
                       Remove
                     </button>
-                    {/*<button
-                      onClick={() => exportToPDF(article)}
-                      className="text-green-600 font-bold hover:bg-green-500 hover:text-white rounded-2xl p-2 transition-colors duration-300"
-                    >
-                      Export to PDF
-                    </button> */}
-                    <button
-                      onClick={() => handleReadMore(article)}
-                      className="text-blue-600 hover:underline"
-                    >
-                      Read more
-                    </button>
+                    {displayMode === 'compact' && (
+                      <button
+                        onClick={() => handleReadMore(article)}
+                        className="text-blue-600 hover:underline"
+                      >
+                        Read more
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <p>No articles in your collection yet&apos;s.</p>
-
+          <p>No articles in your collection yet.</p>
         )}
 
-          
-          {selectedArticle && (
-            <ArticleModal article={selectedArticle} onClose={handleCloseModal} />
-          )}
-
+        {selectedArticle && (
+          <ArticleModal article={selectedArticle} onClose={handleCloseModal} />
+        )}
       </div>
     </div>
   );
