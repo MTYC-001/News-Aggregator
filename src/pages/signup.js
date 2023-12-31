@@ -31,18 +31,18 @@ const SignUp = () => {
             onSubmit={handleSubmit}>
         <p className="mb-5 text-3xl uppercase text-gray-600">Sign Up</p>
         <input type="text" name="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)}
-               className="mb-5 p-3 w-80 focus:border-purple-700 rounded border-2 outline-none"
+               className="mb-5 p-3 w-80 focus:border-blue-700 rounded border-2 outline-none"
                autoComplete="off" placeholder="First Name" required />
         <input type="text" name="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)}
-               className="mb-5 p-3 w-80 focus:border-purple-700 rounded border-2 outline-none"
+               className="mb-5 p-3 w-80 focus:border-blue-700 rounded border-2 outline-none"
                autoComplete="off" placeholder="Last Name" required />
         <input type="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)}
-               className="mb-5 p-3 w-80 focus:border-purple-700 rounded border-2 outline-none"
+               className="mb-5 p-3 w-80 focus:border-blue-700 rounded border-2 outline-none"
                autoComplete="off" placeholder="Email" required />
         <input type="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)}
-               className="mb-5 p-3 w-80 focus:border-purple-700 rounded border-2 outline-none"
+               className="mb-5 p-3 w-80 focus:border-blue-700 rounded border-2 outline-none"
                autoComplete="off" placeholder="Password" required />
-        <button className="bg-purple-600 hover:bg-purple-900 text-white font-bold p-2 rounded w-80"
+        <button className="bg-blue-600 hover:bg-blue-900 text-white font-bold p-2 rounded w-80"
                 type="submit"><span>Sign Up</span></button>
       </form>
     </div>

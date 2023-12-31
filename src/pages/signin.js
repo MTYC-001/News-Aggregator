@@ -37,12 +37,12 @@ const SignIn = () => {
             onSubmit={handleSubmit}>
         {/* Form elements */}
         <input type="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)}
-               className="mb-5 p-3 w-80 focus:border-purple-700 rounded border-2 outline-none"
+               className="mb-5 p-3 w-80 focus:border-blue-700 rounded border-2 outline-none"
                autoComplete="off" placeholder="Email" required />
         <input type="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)}
-               className="mb-5 p-3 w-80 focus:border-purple-700 rounded border-2 outline-none"
+               className="mb-5 p-3 w-80 focus:border-blue-700 rounded border-2 outline-none"
                autoComplete="off" placeholder="Password" required />
-        <button className="bg-purple-600 hover:bg-purple-900 text-white font-bold p-2 rounded w-80"
+        <button className="bg-blue-800 hover:bg-blue-900 text-white font-bold p-2 rounded w-80"
                 type="submit"><span>Sign In</span></button>
 
         {/* Link to the signup page */}

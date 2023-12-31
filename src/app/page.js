@@ -3,17 +3,27 @@ import React, { useState, useEffect } from 'react';
 import ArticleModal from '../components/ArticleModal';
 import Sidebar from '../components/Sidebar';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+
 export default function Home() {
   const [articles, setArticles] = useState([]);
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('All');
-
+  const router = useRouter();
   useEffect(() => {
+    // Check for authentication token
+    const token = localStorage.getItem('token');
+    if (!token) {
+      // Redirect to the sign-in page if not authenticated
+      router.push('/signin');
+    }
+
+    // Fetch articles data
     fetch('/api/articlesData.json')
       .then(response => response.json())
       .then(data => setArticles(data))
       .catch(error => console.error('Error fetching articles:', error));
-  }, []);
+  }, [router]);
 
   // Extract unique categories from articles
   const categories = ['All', ...new Set(articles.map(article => article.category))];
@@ -38,13 +48,15 @@ export default function Home() {
     }
   };
 
-  const handleSearch = (searchUrl) => {
-    const validUrlPattern = /^http:\/\/localhost:3000\/api\/articles\/\d+\.json$/;
-    if (!validUrlPattern.test(searchUrl)) {
-      alert('Please enter a valid URL');
-      return;
-    }
-    const foundArticle = articles.find(article => article.url === searchUrl);
+  const handleSearch = (searchTerm) => {
+    // Convert the search term to lower case for case-insensitive comparison
+    const lowerCaseSearchTerm = searchTerm.toLowerCase();
+  
+    // Find the first article whose title contains the search term
+    const foundArticle = articles.find(article => 
+      article.title.toLowerCase().includes(lowerCaseSearchTerm)
+    );
+  
     if (foundArticle) {
       setSelectedArticle(foundArticle);
     } else {
@@ -88,7 +100,14 @@ export default function Home() {
               key={article.id}
               className="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300"
             >
-              <Image src={article.imageUrl} alt={article.title} className="w-full h-48 object-cover" />
+              <Image
+                src={article.imageUrl}
+                alt={article.title}
+                width={500}
+                height={300}
+                layout="responsive" // You can add this for a responsive image
+              />
+
               <div className="p-4">
                 <h2 className="text-2xl font-bold mb-2">{article.title}</h2>
                 <p className="text-gray-700 mb-4">{article.summary}</p>

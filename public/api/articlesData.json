@@ -7,7 +7,7 @@
     "category": "Technology",
     "url": "http://localhost:3000/api/articles/1.json",
     "publishedAt": "2023-11-25",
-    "imageUrl": "http://localhost:3000/images/future-of-technology.jpg"
+    "imageUrl": "/images/gpt.jpg"
   },
   {
     "id": "2",
@@ -17,7 +17,7 @@
     "category": "Finance",
     "url": "http://localhost:3000/api/articles/2.json",
     "publishedAt": "2023-11-24",
-    "imageUrl": "http://localhost:3000/images/global-economic-shifts.jpg"
+    "imageUrl": "/images/global-economic-shifts.jpg"
   }
     
   ]

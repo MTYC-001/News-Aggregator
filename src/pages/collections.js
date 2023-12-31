@@ -94,7 +94,7 @@ const CollectionsPage = () => {
                   )}
                   {displayMode === 'expanded' && (
                     <>
-                      <p>{article.content}</p>
+                      <p className='text-xl font-heavy'>{article.content}</p>
                       {/* Additional details for expanded view */}
                     </>
                   )}
