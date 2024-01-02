@@ -1,20 +1,16 @@
 {
+    "version": 2,
+    "builds": [
+      {
+        "src": "next.config.js",
+        "use": "@vercel/next"
+      }
+    ],
     "routes": [
-        {
-            "src": "/",
-            "dest": "/"
-        },
-        {
-            "src": "/signin",
-            "dest": "/"
-        },
-        {
-            "src": "/signup",
-            "dest": "/"
-        },
-        {
-            "src": "/collections",
-            "dest": "/"
-        }
+      { "src": "/", "dest": "/index" },
+      { "src": "/collections", "dest": "/collections" },
+      { "src": "/signup", "dest": "/signup" },
+      { "src": "/signin", "dest": "/signin" }
     ]
-}
+  }
+  
