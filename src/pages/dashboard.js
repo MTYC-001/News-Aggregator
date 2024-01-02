@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ArticleModal from '../components/ArticleModal';
+import Image from 'next/image';
 
 const Dashboard = () => {
   const [articles, setArticles] = useState([]);
@@ -32,7 +33,7 @@ const Dashboard = () => {
             key={article.id}
             className="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300"
           >
-            <img src={article.imageUrl} alt={article.title} className="w-full h-48 object-cover" />
+            <Image src={article.imageUrl} alt={article.title} className="w-full h-48 object-cover" />
             <div className="p-4">
               <h2 className="text-2xl font-bold mb-2">{article.title}</h2>
               <p className="text-gray-700 mb-4">{article.summary}</p>
