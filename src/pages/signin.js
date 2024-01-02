@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
-import { useRouter }  from 'next/navigation';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 import '../app/globals.css';
-import Link from 'next/link'; // Import Link from Next.js
+
 const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    
     try {
-      const response = await fetch('http://localhost:3001/signin', { // Assuming '/api/signin' is correct
+      // Replace '{{base_url}}' with the actual base URL of your backend API
+      const response = await fetch('http://api.staging.bzpke.com/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -19,15 +21,16 @@ const SignIn = () => {
 
       if (response.ok) {
         const data = await response.json();
-        localStorage.setItem('token', data.token); // Store the token
-        router.push('/');
+        localStorage.setItem('token', data.token); // Store the token in localStorage
+        router.push('/'); // Redirect to the homepage/dashboard
       } else {
-        console.error('Response not OK:', response);
-        alert('Failed to sign in. Check your credentials.');
+        // If the response is not OK, get the error message from the response
+        const errorData = await response.json();
+        alert(errorData.message); // Show the error message to the user
       }
     } catch (error) {
-      console.error('Fetch error:', error);
-      alert('An error occurred while signing in.');
+      console.error('An error occurred:', error);
+      alert('An error occurred while trying to sign in.');
     }
   };
 
@@ -35,21 +38,36 @@ const SignIn = () => {
     <div className="flex justify-center items-center h-screen bg-gray-200">
       <form className="p-10 bg-white rounded flex justify-center items-center flex-col shadow-md"
             onSubmit={handleSubmit}>
-        {/* Form elements */}
-        <input type="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)}
-               className="mb-5 p-3 w-80 focus:border-blue-700 rounded border-2 outline-none"
-               autoComplete="off" placeholder="Email" required />
-        <input type="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)}
-               className="mb-5 p-3 w-80 focus:border-blue-700 rounded border-2 outline-none"
-               autoComplete="off" placeholder="Password" required />
-        <button className="bg-blue-800 hover:bg-blue-900 text-white font-bold p-2 rounded w-80"
-                type="submit"><span>Sign In</span></button>
-
-        {/* Link to the signup page */}
+        <input
+          type="email"
+          name="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="mb-5 p-3 w-80 focus:border-blue-700 rounded border-2 outline-none"
+          autoComplete="off"
+          placeholder="Email"
+          required
+        />
+        <input
+          type="password"
+          name="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="mb-5 p-3 w-80 focus:border-blue-700 rounded border-2 outline-none"
+          autoComplete="off"
+          placeholder="Password"
+          required
+        />
+        <button
+          className="bg-blue-800 hover:bg-blue-900 text-white font-bold p-2 rounded w-80"
+          type="submit"
+        >
+          Sign In
+        </button>
         <p className="mt-4">
-          Don't have an account? 
+          Don't have an account?
           <Link href="/signup">
-            <span className="text-blue-600 hover:text-blue-800 ml-1 cursor-pointer">Sign up</span>
+            <span className="text-blue-600 hover:text-blue-800 ml-1">Sign up</span>
           </Link>
         </p>
       </form>

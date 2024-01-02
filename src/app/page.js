@@ -11,31 +11,50 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const router = useRouter();
   useEffect(() => {
-    // Check for authentication token
-    const token = localStorage.getItem('token');
-    if (!token) {
-      // Redirect to the sign-in page if not authenticated
-      router.push('/signin');
-    }
-
-    // Fetch articles data
-    fetch('/api/articlesData.json')
-      .then(response => response.json())
-      .then(data => setArticles(data))
-      .catch(error => console.error('Error fetching articles:', error));
+    // The token should ideally be stored in a secure location, such as an HttpOnly cookie
+    // For demonstration, I'll use the value you provided directly in the code
+    // In a production environment, ensure you're handling tokens securely
+    const token = '1|KdJTYobRKQ0c5aEezz4UrupsD2OM944UEogjRfsVae9370ff';
+  
+    fetch('http://api.staging.bzpke.com/api/sources', {
+      method: 'GET', // or 'POST' if required by your endpoint
+      headers: {
+        'Authorization': `Bearer ${token}`, // Use the actual token value here
+        // Include other headers if necessary, like 'Content-Type': 'application/json'
+      },
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      // Handle the data
+      console.log(data);
+      // Assuming the articles are nested within the 'sources' structure
+      const fetchedArticles = data.sources.map(source => source.source).flat();
+      setArticles(fetchedArticles);
+    })
+    .catch(error => {
+      console.error('Error fetching data:', error);
+    });
   }, [router]);
+  
+  
 
-  // Extract unique categories from articles
-  const categories = ['All', ...new Set(articles.map(article => article.category))];
+// Extract unique categories from articles
+const categories = ['All', ...new Set(articles.map(article => article.category))];
+
+// Filter articles based on selected category
+const filteredArticles = selectedCategory === 'All' 
+  ? articles 
+  : articles.filter(article => article.category === selectedCategory);
+
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
   };
-
-  // Filter articles based on selected category
-  const filteredArticles = selectedCategory === 'All' 
-    ? articles 
-    : articles.filter(article => article.category === selectedCategory);
 
   const addToCollection = (article) => {
     let collection = JSON.parse(localStorage.getItem('userCollection')) || [];
@@ -100,17 +119,19 @@ export default function Home() {
               key={article.id}
               className="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300"
             >
-              <Image
-                src={article.imageUrl}
-                alt={article.title}
-                width={500}
-                height={300}
-                layout="responsive" // You can add this for a responsive image
-              />
+                <Image
+                  src={article.metadata.image_url}
+                  alt={article.title}
+                  width={500}
+                  height={300}
+                  layout="responsive"
+                />
 
               <div className="p-4">
                 <h2 className="text-2xl font-bold mb-2">{article.title}</h2>
                 <p className="text-gray-700 mb-4">{article.summary}</p>
+                <p className="text-gray-700 mb-4">{article.link}</p>
+                <p className="text-gray-700 mb-4">{article.metadata.copyright}</p>
                 <button
                   onClick={() => addToCollection(article)}
                   className="text-blue-600 hover:underline mr-2"
