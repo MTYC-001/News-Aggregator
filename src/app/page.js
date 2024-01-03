@@ -11,12 +11,16 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const router = useRouter();
   useEffect(() => {
-    const token = process.env.NEXT_PUBLIC_API_TOKEN; // Use environment variable
+    // The token should ideally be stored in a secure location, such as an HttpOnly cookie
+    // For demonstration, I'll use the value you provided directly in the code
+    // In a production environment, ensure you're handling tokens securely
+    const token = process.env.NEXT_PUBLIC_API_TOKEN;
   
-    fetch('https://api.staging.bzpke.com/api/sources', {
-      method: 'GET',
+    fetch('http://api.staging.bzpke.com/api/sources', {
+      method: 'GET', // or 'POST' if required by your endpoint
       headers: {
-        'Authorization': `Bearer ${token}`,
+        'Authorization': `Bearer ${token}`, // Use the actual token value here
+        // Include other headers if necessary, like 'Content-Type': 'application/json'
       },
     })
     .then(response => {
@@ -28,13 +32,14 @@ export default function Home() {
     .then(data => {
       // Handle the data
       console.log(data);
-      // Update your state or UI here
+      // Assuming the articles are nested within the 'sources' structure
+      const fetchedArticles = data.sources.map(source => source.source).flat();
+      setArticles(fetchedArticles);
     })
     .catch(error => {
       console.error('Error fetching data:', error);
     });
-  }, []); // Empty dependency array if you only want to run it on mount
-  
+  }, [router]);
   
   
 
