@@ -1,3 +1,4 @@
+
 "use client";
 import React, { useState, useEffect } from 'react';
 import ArticleModal from '../components/ArticleModal';
@@ -5,22 +6,20 @@ import Sidebar from '../components/Sidebar';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
+{/*This is the Home page (Marvin Tan)*/}
 export default function Home() {
   const [articles, setArticles] = useState([]);
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const router = useRouter();
   useEffect(() => {
-    // The token should ideally be stored in a secure location, such as an HttpOnly cookie
-    // For demonstration, I'll use the value you provided directly in the code
-    // In a production environment, ensure you're handling tokens securely
     const token = process.env.NEXT_PUBLIC_API_TOKEN;
   
-    fetch('http://api.staging.bzpke.com/api/sources', {
-      method: 'GET', // or 'POST' if required by your endpoint
+    fetch('https://api.staging.bzpke.com/api/sources', {
+      method: 'GET', 
       headers: {
         'Authorization': `Bearer ${token}`, // Use the actual token value here
-        // Include other headers if necessary, like 'Content-Type': 'application/json'
+        
       },
     })
     .then(response => {

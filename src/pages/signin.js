@@ -1,8 +1,10 @@
+
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import '../app/globals.css';
 
+{/*This is to handle the sign in (Marvin Tan)*/}
 const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -12,8 +14,8 @@ const SignIn = () => {
     event.preventDefault();
     
     try {
-      // Replace '{{base_url}}' with the actual base URL of your backend API
-      const response = await fetch('http://api.staging.bzpke.com/api/login', {
+      
+      const response = await fetch('https://api.staging.bzpke.com/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),

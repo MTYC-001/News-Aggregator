@@ -6,6 +6,8 @@ import ArticleModal from '../components/ArticleModal';
 import Image from 'next/image';
 import expandArrows from '../../images/expand-arrows.png'
 import compactArrows from '../../images/compact-arrows.png'
+
+{/*This is for viewing the users collection after adding/following article from the home page (Marvin Tan)*/}
 const CollectionsPage = () => {
   const [userCollection, setUserCollection] = useState([]);
   const [articleTags, setArticleTags] = useState({});

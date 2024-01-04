@@ -1,7 +1,9 @@
+
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import '../app/globals.css';
 
+{/*This is for handling sign up (Marvin Tan)*/}
 const SignUp = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -12,7 +14,7 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const apiUrl = 'http://api.staging.bzpke.com/api/signup'; // Replace with your actual API endpoint URL
+    const apiUrl = 'https://api.staging.bzpke.com/api/signup'; // Replace with your actual API endpoint URL
 
     const user = {
       name: name,
