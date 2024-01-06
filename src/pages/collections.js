@@ -64,11 +64,21 @@ const CollectionsPage = () => {
         <div className="mode-selector mb-4 px-16">
           <button onClick={() => setDisplayMode('compact')} className={displayMode === 'compact' ? 'active' : ''}>
             Compact
-            <Image src={compactArrows} alt="Compact" style={{ width: '20px', marginRight: '5px' }}></Image>
+            <Image 
+              src={compactArrows} 
+              alt="Compact" 
+              width={24} 
+              height={24} 
+            />
           </button>
           <button onClick={() => setDisplayMode('expanded')} className={displayMode === 'expanded' ? 'active' : ''}>
             Expand
-            <Image src={expandArrows} alt="Expand" style={{ width: '20px', marginRight: '5px' }}></Image>
+            <Image 
+              src={expandArrows} 
+              alt="Expand" 
+              width={24} 
+              height={24} 
+            />
           </button>
         </div>
 

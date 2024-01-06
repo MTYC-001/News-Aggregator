@@ -1,10 +1,10 @@
-
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router'; // Import useRouter
 
-{/*This is to handle the functions of navigation (Marvin Tan)*/}
 const Sidebar = ({ onSearch, currentPage }) => {
   const [inputValue, setInputValue] = useState('');
+  const router = useRouter(); // Initialize useRouter hook for redirection
 
   const handleSearchSubmit = (event) => {
     event.preventDefault();
@@ -59,20 +59,23 @@ const Sidebar = ({ onSearch, currentPage }) => {
         </form>
       </div>
 
-      <nav className="flex-grow">
-        <Link href="/" className={`block px-4 py-2 hover:bg-blue-700 transition-colors duration-200 ${currentPage === 'dashboard' ? 'bg-blue-700' : ''}`}>
-          Dashboard
+      <nav className="flex flex-col flex-grow px-4">
+        <Link href="/">
+          <a className={`block py-2 hover:bg-blue-700 transition-colors duration-200 ${currentPage === 'dashboard' ? 'bg-blue-700' : ''}`}>
+            Dashboard
+          </a>
         </Link>
-        <Link href="/collections" className={`block px-4 py-2 hover:bg-blue-700 transition-colors duration-200 ${currentPage === 'collections' ? 'bg-blue-700' : ''}`}>
-          User&apos;s Collection
+        <Link href="/collections">
+          <a className={`block py-2 hover:bg-blue-700 transition-colors duration-200 ${currentPage === 'collections' ? 'bg-blue-700' : ''}`}>
+            User's Collection
+          </a>
         </Link>
         <button
           onClick={handleLogout}
-          className="mt-auto mb-4 px-4 py-2 hover:bg-blue-700 transition-colors duration-200 w-full text-left"
+          className="mt-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full"
         >
           Logout
         </button>
-        {/* Add more links as needed */}
       </nav>
     </div>
   );
