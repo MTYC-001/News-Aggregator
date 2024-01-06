@@ -14,7 +14,7 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const apiUrl = 'https://api.staging.bzpke.com/api/signup'; // Replace with your actual API endpoint URL
+    const apiUrl = 'https://api2.staging.bzpke.com/api/signup'; // Replace with your actual API endpoint URL
 
     const user = {
       name: name,
