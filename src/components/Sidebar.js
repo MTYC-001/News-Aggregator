@@ -67,7 +67,7 @@ const Sidebar = ({ onSearch, currentPage }) => {
         </Link>
         <Link href="/collections">
           <a className={`block py-2 hover:bg-blue-700 transition-colors duration-200 ${currentPage === 'collections' ? 'bg-blue-700' : ''}`}>
-            User's Collection
+            User&apos;s Collection
           </a>
         </Link>
         <button
