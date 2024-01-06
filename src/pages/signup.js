@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import '../app/globals.css';
+
 
 {/*This is for handling sign up (Marvin Tan)*/}
 const SignUp = () => {

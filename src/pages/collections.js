@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import '../app/globals.css';
+
 import Sidebar from '../components/Sidebar';
 import ArticleModal from '../components/ArticleModal';
 import Image from 'next/image';

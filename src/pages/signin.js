@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import '../app/globals.css';
+
 
 {/*This is to handle the sign in (Marvin Tan)*/}
 const SignIn = () => {

@@ -4,9 +4,8 @@ import React, { useState, useEffect } from 'react';
 import ArticleModal from '../components/ArticleModal';
 import Sidebar from '../components/Sidebar';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import '../src/app/globals.css';
-{/*This is the Home page (Marvin Tan)*/}
+import { useRouter } from 'next/router'; 
+
 export default function Home() {
   const [articles, setArticles] = useState([]);
   const [selectedArticle, setSelectedArticle] = useState(null);
