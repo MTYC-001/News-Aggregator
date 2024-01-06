@@ -91,13 +91,13 @@ const CollectionsPage = () => {
                     <h2 className="text-2xl font-bold mb-2">{article.title}</h2>
                   </div>
                 )}
-                <Image
+                {/*<Image
                   src={article.imageUrl}
                   alt={article.title}
                   width={500}
                   height={300}
                   layout="responsive"
-                />
+                />*/}
 
                 <div className="p-4">
                   {displayMode === 'compact' && (

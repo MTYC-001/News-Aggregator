@@ -14,7 +14,7 @@ export default function Home() {
   useEffect(() => {
     const token = process.env.NEXT_PUBLIC_API_TOKEN;
   
-    fetch('https://api.staging.bzpke.com/api/sources', {
+    fetch('https://api2.staging.bzpke.com/api/sources', {
       method: 'GET', 
       headers: {
         'Authorization': `Bearer ${token}`, // Use the actual token value here
@@ -117,13 +117,13 @@ const filteredArticles = selectedCategory === 'All'
               key={article.id}
               className="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300"
             >
-                <Image
+                {/*<Image
                   src={article.metadata.image_url}
                   alt={article.title}
                   width={500}
                   height={300}
                   layout="responsive"
-                />
+                />*/}
 
               <div className="p-4">
                 <h2 className="text-2xl font-bold mb-2">{article.title}</h2>
