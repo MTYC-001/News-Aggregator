@@ -1,12 +1,13 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 const ArticleModal = ({ article, onClose }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 z-50 flex justify-center items-start pt-10">
       <div className="bg-white w-full max-w-2xl mx-4 md:mx-0 rounded-lg shadow-2xl overflow-hidden">
         <div className="flex justify-between items-center border-b p-4">
           {/*get url for the article like from BBC news from backend and put it into this a tag*/}
-          <a href='/' className="text-lg font-bold">{article.title}</a>
+          <Link href='/' className="text-lg font-bold">{article.title}</Link>
           <button onClick={onClose} className="text-black">×</button>
         </div>
         <div className="p-4">
