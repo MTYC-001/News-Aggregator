@@ -15,7 +15,7 @@ export default function Home() {
   useEffect(() => {
     const token = process.env.NEXT_PUBLIC_API_TOKEN;
   
-    fetch('https://api.staging.bzpke.com/api/sources', {
+    fetch('https://api2.staging.bzpke.com/api/sources', {
       method: 'GET', 
       headers: {
         'Authorization': `Bearer ${token}`, // Use the actual token value here

@@ -8,15 +8,45 @@ const Sidebar = ({ onSearch, currentPage }) => {
 
   const handleSearchSubmit = (event) => {
     event.preventDefault();
-    onSearch(inputValue);
+  
+    // Make sure to encode the inputValue to handle special characters
+    const searchTerm = encodeURIComponent(inputValue);
+  
+    // Append the searchTerm to the API endpoint if the API requires it as a query parameter
+    // If the API requires a different method of passing the search term, adjust accordingly
+    fetch(`http://api2.staging.bzpke.com/api/read/rss?search=${searchTerm}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        // Add any other headers required by the API, such as Authorization if needed
+      },
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      // Assuming the API returns an array of search results, pass this array to the onSearch callback
+      // If the data structure is different, adjust the following line to pass the correct data
+      onSearch(data);
+    })
+    .catch(error => {
+      console.error('Error fetching search results:', error);
+      // Handle any errors, such as updating the UI to show an error message
+    });
+  
+    // Clear the input field
     setInputValue('');
   };
+  
 
   const handleLogout = () => {
     const token = localStorage.getItem('token'); // Retrieve the token
 
     // Send a request to the logout endpoint
-    fetch('https://api.staging.bzpke.com/api/logout', {
+    fetch('https://api2.staging.bzpke.com/api/logout', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`, // Use the token

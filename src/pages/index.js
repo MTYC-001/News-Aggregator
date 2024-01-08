@@ -18,7 +18,6 @@ export default function Home() {
       method: 'GET', 
       headers: {
         'Authorization': `Bearer ${token}`, // Use the actual token value here
-        
       },
     })
     .then(response => {
@@ -28,16 +27,22 @@ export default function Home() {
       return response.json();
     })
     .then(data => {
-      // Handle the data
-      console.log(data);
-      // Assuming the articles are nested within the 'sources' structure
-      const fetchedArticles = data.sources.map(source => source.source).flat();
+      console.log(data); // This will log the entire data structure
+  
+      // Process the data to include both 'source' and 'feeds'
+      const fetchedArticles = data.sources.map(sourceItem => {
+        return {
+          ...sourceItem.source[0], // Assuming there's only one source per item
+          feeds: sourceItem.feeds
+        };
+      });
       setArticles(fetchedArticles);
     })
     .catch(error => {
       console.error('Error fetching data:', error);
     });
   }, [router]);
+  
   
   
 
