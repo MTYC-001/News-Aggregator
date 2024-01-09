@@ -12,7 +12,14 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const router = useRouter();
   useEffect(() => {
-    const token = process.env.NEXT_PUBLIC_API_TOKEN;
+    // Check for token in localStorage
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      // If no token, redirect to SignIn page
+      router.push('/signin');
+      return; // Early return to avoid running the code below
+    }
   
     fetch('https://api2.staging.bzpke.com/api/sources', {
       method: 'GET', 
@@ -95,13 +102,13 @@ const filteredArticles = selectedCategory === 'All'
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen flex">
+    <div className="bg-gray-100 min-h-screen flex flex-col md:flex-row">
       <Sidebar onSearch={handleSearch} currentPage="/" />
-      <div className="flex-grow p-4 ml-64">
-        <h1 className="text-3xl font-semibold mb-6">Dashboard</h1>
+      <div className="flex-grow p-4 md:ml-64">
+        <h1 className="text-2xl md:text-3xl font-semibold mb-4 md:mb-6">Dashboard</h1>
 
         {/* Category Buttons */}
-        <div className="mb-4">
+        <div className="mb-4 flex flex-wrap">
           {categories.map(category => (
             <button
               key={category}
@@ -116,7 +123,7 @@ const filteredArticles = selectedCategory === 'All'
         </div>
 
         {/* Article Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {filteredArticles.map((article) => (
             <div
               key={article.id}

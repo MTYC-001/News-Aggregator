@@ -1,10 +1,7 @@
-
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
-
-{/*This is to handle the sign in (Marvin Tan)*/}
 const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -14,7 +11,6 @@ const SignIn = () => {
     event.preventDefault();
     
     try {
-      
       const response = await fetch('https://api2.staging.bzpke.com/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -23,10 +19,11 @@ const SignIn = () => {
 
       if (response.ok) {
         const data = await response.json();
-        localStorage.setItem('token', data.token); // Store the token in localStorage
+        // Update here: Store the access token correctly
+        localStorage.setItem('token', data.token.access_token); // Store the access token
         router.push('/'); // Redirect to the homepage/dashboard
       } else {
-        // If the response is not OK, get the error message from the response
+        // If the response is not OK, handle the error
         const errorData = await response.json();
         alert(errorData.message); // Show the error message to the user
       }
@@ -67,7 +64,7 @@ const SignIn = () => {
           Sign In
         </button>
         <p className="mt-4">
-          Don&apos;t have an account?
+          Don't have an account?
           <Link href="/signup">
             <span className="text-blue-600 hover:text-blue-800 ml-1">Sign up</span>
           </Link>

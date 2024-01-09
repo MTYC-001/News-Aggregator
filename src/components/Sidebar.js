@@ -1,24 +1,19 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/router'; // Import useRouter
+import { useRouter } from 'next/router';
 
 const Sidebar = ({ onSearch, currentPage }) => {
   const [inputValue, setInputValue] = useState('');
-  const router = useRouter(); // Initialize useRouter hook for redirection
+  const router = useRouter();
 
   const handleSearchSubmit = (event) => {
     event.preventDefault();
-  
-    // Make sure to encode the inputValue to handle special characters
     const searchTerm = encodeURIComponent(inputValue);
-  
-    // Append the searchTerm to the API endpoint if the API requires it as a query parameter
-    // If the API requires a different method of passing the search term, adjust accordingly
     fetch(`http://api2.staging.bzpke.com/api/read/rss?search=${searchTerm}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        // Add any other headers required by the API, such as Authorization if needed
+        // Add any other headers required by the API
       },
     })
     .then(response => {
@@ -28,45 +23,22 @@ const Sidebar = ({ onSearch, currentPage }) => {
       return response.json();
     })
     .then(data => {
-      // Assuming the API returns an array of search results, pass this array to the onSearch callback
-      // If the data structure is different, adjust the following line to pass the correct data
       onSearch(data);
     })
     .catch(error => {
       console.error('Error fetching search results:', error);
-      // Handle any errors, such as updating the UI to show an error message
     });
-  
-    // Clear the input field
     setInputValue('');
   };
-  
 
   const handleLogout = () => {
-    const token = localStorage.getItem('token'); // Retrieve the token
-
-    // Send a request to the logout endpoint
-    fetch('https://api2.staging.bzpke.com/api/logout', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`, // Use the token
-        'Content-Type': 'application/json'
-      },
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Logout failed');
-      }
-      return response.json();
-    })
-    .then(() => {
-      localStorage.removeItem('token'); // Clear the token from local storage
-      router.push('/signin'); // Redirect to the signin page
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
+    // Clear the token from local storage
+    localStorage.removeItem('token');
+  
+    // Redirect user to the login page
+    router.push('/signin');
   };
+  
 
   return (
     <div className="fixed top-0 left-0 h-full w-64 bg-blue-800 text-white flex flex-col z-10">
@@ -91,12 +63,12 @@ const Sidebar = ({ onSearch, currentPage }) => {
 
       <nav className="flex flex-col flex-grow px-4">
         <Link href="/">
-          <a className={`block py-2 hover:bg-blue-700 transition-colors duration-200 ${currentPage === 'dashboard' ? 'bg-blue-700' : ''}`}>
+          <a className={`block py-2 hover:bg-blue-700 transition-colors duration-200 ${currentPage === '/' ? 'bg-blue-700' : ''}`}>
             Dashboard
           </a>
         </Link>
         <Link href="/collections">
-          <a className={`block py-2 hover:bg-blue-700 transition-colors duration-200 ${currentPage === 'collections' ? 'bg-blue-700' : ''}`}>
+          <a className={`block py-2 hover:bg-blue-700 transition-colors duration-200 ${currentPage === '/collections' ? 'bg-blue-700' : ''}`}>
             User&apos;s Collection
           </a>
         </Link>
