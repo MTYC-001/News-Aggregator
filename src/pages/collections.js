@@ -34,7 +34,7 @@ const CollectionsPage = () => {
       <Sidebar currentPage="collections" />
       
       <div className="flex-grow p-4 ml-64">
-        <h1 className="text-3xl font-semibold mb-6">User's Collection</h1>
+        <h1 className="text-3xl font-semibold mb-6">User&apos;s Collection</h1>
 
         <div className="mode-selector mb-4">
           <button onClick={() => setDisplayMode('compact')} className={displayMode === 'compact' ? 'active' : ''}>
