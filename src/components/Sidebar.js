@@ -9,11 +9,11 @@ const Sidebar = ({ onSearch, currentPage }) => {
   const handleSearchSubmit = (event) => {
     event.preventDefault();
     const searchTerm = encodeURIComponent(inputValue);
-    fetch(`http://api2.staging.bzpke.com/api/read/rss?search=${searchTerm}`, {
+    fetch(`https://api2.staging.bzpke.com/api/read/rss?search=${searchTerm}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        // Add any other headers required by the API
+        
       },
     })
     .then(response => {
