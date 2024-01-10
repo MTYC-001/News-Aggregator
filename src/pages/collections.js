@@ -35,15 +35,20 @@ const CollectionsPage = () => {
   };
 
   const exportArticle = async (feedId) => {
-    console.log(feedId)
     try {
-      const token = localStorage.getItem('token'); 
-      const response = await axios.post('https://api2.staging.bzpke.com/api/export/feeds', { id: feedId }, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-      console.log(response)
+      const token = localStorage.getItem('token'); // assuming token is stored in local storage
+      const response = await axios.post('https://api2.staging.bzpke.com/api/export/feeds', 
+        {
+          id: feedId // Send feedId in the request body
+        }, 
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json' // Set the content type as JSON
+          },
+        }
+      );
+  
       if (response.status === 200) {
         alert('Article exported successfully!');
         // Handle any additional tasks after successful export
@@ -55,6 +60,7 @@ const CollectionsPage = () => {
       alert('Error exporting article.');
     }
   };
+  
 
   return (
     <div className="flex min-h-screen bg-gray-100">
