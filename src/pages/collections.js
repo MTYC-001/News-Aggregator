@@ -37,13 +37,13 @@ const CollectionsPage = () => {
   const exportArticle = async (feedId) => {
     console.log(feedId)
     try {
-      const token = localStorage.getItem('token'); // assuming token is stored in local storage
+      const token = localStorage.getItem('token'); 
       const response = await axios.post('https://api2.staging.bzpke.com/api/export/feeds', { id: feedId }, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
       });
-
+      console.log(response)
       if (response.status === 200) {
         alert('Article exported successfully!');
         // Handle any additional tasks after successful export
@@ -60,7 +60,7 @@ const CollectionsPage = () => {
     <div className="flex min-h-screen bg-gray-100">
       <Sidebar currentPage="/collections" />
       <div className="flex-grow p-4 ml-64">
-        <h1 className="text-3xl font-semibold mb-6">User's Collection</h1>
+        <h1 className="text-3xl font-semibold mb-6">User&apos;s Collection</h1>
 
         <div className="mode-selector mb-4">
           <button onClick={() => setDisplayMode('compact')} className={displayMode === 'compact' ? 'active' : ''}>
