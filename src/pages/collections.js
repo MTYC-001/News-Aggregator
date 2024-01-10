@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import Sidebar from '../components/Sidebar';
 import ArticleModal from '../components/ArticleModal';
 import DOMPurify from 'dompurify';
+
 const CollectionsPage = () => {
   const [userCollection, setUserCollection] = useState([]);
   const [selectedArticle, setSelectedArticle] = useState(null);
@@ -10,12 +12,11 @@ const CollectionsPage = () => {
   const createMarkup = (htmlContent) => {
     return { __html: DOMPurify.sanitize(htmlContent) };
   };
-  
+
   useEffect(() => {
     const collectionData = localStorage.getItem('userCollection');
     if (collectionData) {
       setUserCollection(JSON.parse(collectionData));
-      console.log(collectionData)
     }
   }, []);
 
@@ -33,19 +34,40 @@ const CollectionsPage = () => {
     setSelectedArticle(null);
   };
 
+  const exportArticle = async (feedId) => {
+    console.log(feedId)
+    try {
+      const token = localStorage.getItem('token'); // assuming token is stored in local storage
+      const response = await axios.post('https://api2.staging.bzpke.com/api/export/feeds', { id: feedId }, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (response.status === 200) {
+        alert('Article exported successfully!');
+        // Handle any additional tasks after successful export
+      } else {
+        alert('Failed to export the article.');
+      }
+    } catch (error) {
+      console.error('Error exporting article:', error);
+      alert('Error exporting article.');
+    }
+  };
+
   return (
     <div className="flex min-h-screen bg-gray-100">
-      <Sidebar currentPage="collections" />
-      
+      <Sidebar currentPage="/collections" />
       <div className="flex-grow p-4 ml-64">
-        <h1 className="text-3xl font-semibold mb-6">User&apos;s Collection</h1>
+        <h1 className="text-3xl font-semibold mb-6">User's Collection</h1>
 
         <div className="mode-selector mb-4">
           <button onClick={() => setDisplayMode('compact')} className={displayMode === 'compact' ? 'active' : ''}>
             Compact
           </button>
           <button onClick={() => setDisplayMode('expanded')} className={displayMode === 'expanded' ? 'active' : ''}>
-            Expand
+            Expanded
           </button>
         </div>
 
@@ -59,11 +81,16 @@ const CollectionsPage = () => {
                       <h2 className="text-2xl font-bold mb-2">{article.title}</h2>
                       {article.feeds.map(feed => (
                         <div key={feed.id} className="mb-4">
-                         <h3 className="text-xl font-semibold">{feed.feed.title}</h3>
+                          <h3 className="text-xl font-semibold">{feed.feed.title}</h3>
                           <div dangerouslySetInnerHTML={createMarkup(feed.feed.content)} />
                           <p>Link: <a className='text-blue-800 underline' href={feed.feed.link} target="_blank" rel="noopener noreferrer">{feed.feed.link}</a></p>
                           <p>Published on: {feed.feed.pubdate}</p>
-                          {/* You can add more details here */}
+                          <button
+                            onClick={() => exportArticle(feed.feed.id)} // Corrected to use feed.feed.id
+                            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                          >
+                            Export Article
+                          </button>
                         </div>
                       ))}
                     </>
@@ -82,7 +109,7 @@ const CollectionsPage = () => {
                       onClick={() => handleReadMore(article)}
                       className="text-blue-600 hover:underline"
                     >
-                      Read more
+                      Read More
                     </button>
                   </div>
                 </div>
