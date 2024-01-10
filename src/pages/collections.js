@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import ArticleModal from '../components/ArticleModal';
-
+import DOMPurify from 'dompurify';
 const CollectionsPage = () => {
   const [userCollection, setUserCollection] = useState([]);
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [displayMode, setDisplayMode] = useState('compact'); // 'compact' or 'expanded'
 
+  const createMarkup = (htmlContent) => {
+    return { __html: DOMPurify.sanitize(htmlContent) };
+  };
+  
   useEffect(() => {
     const collectionData = localStorage.getItem('userCollection');
     if (collectionData) {
@@ -55,8 +59,8 @@ const CollectionsPage = () => {
                       <h2 className="text-2xl font-bold mb-2">{article.title}</h2>
                       {article.feeds.map(feed => (
                         <div key={feed.id} className="mb-4">
-                          <h3 className="text-xl font-semibold">{feed.feed.title}</h3>
-                          <p>{feed.feed.content || 'No description available.'}</p>
+                         <h3 className="text-xl font-semibold">{feed.feed.title}</h3>
+                          <div dangerouslySetInnerHTML={createMarkup(feed.feed.content)} />
                           <p>Link: <a className='text-blue-800 underline' href={feed.feed.link} target="_blank" rel="noopener noreferrer">{feed.feed.link}</a></p>
                           <p>Published on: {feed.feed.pubdate}</p>
                           {/* You can add more details here */}
