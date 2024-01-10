@@ -15,7 +15,7 @@ const Sidebar = ({ onSearch, currentPage }) => {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify({ query: searchTerm })
+        body: JSON.stringify({ url: searchTerm })
     })
     .then(response => {
         if (!response.ok) {
