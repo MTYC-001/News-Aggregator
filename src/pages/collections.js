@@ -35,6 +35,7 @@ const CollectionsPage = () => {
   };
 
   const exportArticle = async (feedId) => {
+    console.log("ID send for export:", feedId)
     try {
       const token = localStorage.getItem('token'); // assuming token is stored in local storage
       const response = await axios.post('https://api2.staging.bzpke.com/api/export/feeds', 
