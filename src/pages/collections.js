@@ -56,8 +56,8 @@ const CollectionsPage = () => {
                       {article.feeds.map(feed => (
                         <div key={feed.id} className="mb-4">
                           <h3 className="text-xl font-semibold">{feed.feed.title}</h3>
-                          <p>{feed.feed.description || 'No description available.'}</p>
-                          <p>Link: <a href={feed.feed.link} target="_blank" rel="noopener noreferrer">{feed.feed.link}</a></p>
+                          <p>{feed.feed.content || 'No description available.'}</p>
+                          <p>Link: <a className='text-blue-800 underline' href={feed.feed.link} target="_blank" rel="noopener noreferrer">{feed.feed.link}</a></p>
                           <p>Published on: {feed.feed.pubdate}</p>
                           {/* You can add more details here */}
                         </div>

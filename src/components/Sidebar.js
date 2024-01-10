@@ -9,27 +9,35 @@ const Sidebar = ({ onSearch, currentPage }) => {
   const handleSearchSubmit = (event) => {
     event.preventDefault();
     const searchTerm = encodeURIComponent(inputValue);
-    fetch(`https://api2.staging.bzpke.com/api/read/rss?search=${searchTerm}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        
-      },
+    fetch(`https://api2.staging.bzpke.com/api/search`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ query: searchTerm })
     })
     .then(response => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return response.json();
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.text(); // Changed to text() to handle non-JSON responses
     })
-    .then(data => {
-      onSearch(data);
+    .then(text => {
+        try {
+            const data = JSON.parse(text); // Parsing the text response to JSON
+            onSearch(data[0]); // Assuming the first item in the response data is the article
+        } catch (e) {
+            console.error("Error parsing JSON:", e);
+        }
     })
     .catch(error => {
-      console.error('Error fetching search results:', error);
+        console.error('Error fetching search results:', error);
     });
     setInputValue('');
-  };
+};
+
+
 
   const handleLogout = () => {
     // Clear the token from local storage
