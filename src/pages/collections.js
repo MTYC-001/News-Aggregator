@@ -35,24 +35,23 @@ const CollectionsPage = () => {
   };
 
   const exportArticle = async (userSourceId) => {
-    console.log("User source ID sent for export:", userSourceId)
+    console.log("User source ID sent for export:", userSourceId);
     try {
-      const token = localStorage.getItem('token'); 
+      const token = localStorage.getItem('token');
       const response = await axios.post('https://api2.staging.bzpke.com/api/export/feeds', 
         {
-          user_source_ids: [userSourceId] // Send userSourceId in an array in the request body
+          user_source_ids: [userSourceId]
         }, 
         {
           headers: {
             'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json' 
+            'Content-Type': 'application/json'
           },
         }
       );
   
       if (response.status === 200) {
         alert('Article exported successfully!');
-        
       } else {
         alert('Failed to export the article.');
       }
@@ -61,8 +60,6 @@ const CollectionsPage = () => {
       alert('Error exporting article.');
     }
   };
-  
-  
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -86,23 +83,21 @@ const CollectionsPage = () => {
                 <div className="p-4">
                   {displayMode === 'expanded' && (
                     <>
-                      
-                      {article.feeds.map(feed => (
+                      <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-2xl font-bold">{article.title}</h2>
+                        <button
+                          onClick={() => exportArticle(article.id)}
+                          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                        >
+                          Export Article
+                        </button>
+                      </div>
+                      {Array.isArray(article.feeds) && article.feeds.map(feed => (
                         <div key={feed.id} className="mb-4">
-                          <div key={feed.id} className="mb-4 flex justify-between items-center">
-                            <h2 className="text-2xl font-bold mb-2">{article.title}</h2>
-                            <button
-                              onClick={() => exportArticle(article.id)}
-                              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-4"
-                            >
-                              Export Article
-                            </button>
-                          </div>
-                          <h3 className="text-xl font-semibold flex-grow">{feed.feed.title}</h3>
+                          <h3 className="text-xl font-semibold">{feed.feed.title}</h3>
                           <div dangerouslySetInnerHTML={createMarkup(feed.feed.content)} />
                           <p>Link: <a className='text-blue-800 underline' href={feed.feed.link} target="_blank" rel="noopener noreferrer">{feed.feed.link}</a></p>
                           <p>Published on: {feed.feed.pubdate}</p>
-
                         </div>
                       ))}
                     </>

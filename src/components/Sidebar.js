@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import ArticleModal from '../components/ArticleModal'; // Make sure the path to ArticleModal is correct
 
-const Sidebar = ({ onSearch, currentPage }) => {
+const Sidebar = ({ currentPage }) => {
   const [inputValue, setInputValue] = useState('');
+  const [searchResult, setSearchResult] = useState(null); // State to hold search result
   const router = useRouter();
 
   const handleSearchSubmit = (event) => {
@@ -21,32 +23,22 @@ const Sidebar = ({ onSearch, currentPage }) => {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        return response.text(); // Changed to text() to handle non-JSON responses
+        return response.json(); // Assuming the response is JSON
     })
-    .then(text => {
-        try {
-            const data = JSON.parse(text); // Parsing the text response to JSON
-            onSearch(data[0]); // Assuming the first item in the response data is the article
-        } catch (e) {
-            console.error("Error parsing JSON:", e);
-        }
+    .then(data => {
+        console.log("Payload:", data);
+        setSearchResult(data); // Store the first item of the payload in state
     })
     .catch(error => {
         console.error('Error fetching search results:', error);
     });
     setInputValue('');
-};
-
-
+  };
 
   const handleLogout = () => {
-    // Clear the token from local storage
     localStorage.removeItem('token');
-  
-    // Redirect user to the login page
     router.push('/signin');
   };
-  
 
   return (
     <div className="fixed top-0 left-0 h-full w-64 bg-blue-800 text-white flex flex-col z-10">
@@ -87,6 +79,10 @@ const Sidebar = ({ onSearch, currentPage }) => {
           Logout
         </button>
       </nav>
+
+      {searchResult && (
+        <ArticleModal article={searchResult} onClose={() => setSearchResult(null)} />
+      )}
     </div>
   );
 };
