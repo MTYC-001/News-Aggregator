@@ -8,7 +8,7 @@ const CollectionsPage = () => {
   const [userCollection, setUserCollection] = useState([]);
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [displayMode, setDisplayMode] = useState('compact'); // 'compact' or 'expanded'
-  const [exportResponse, setExportResponse] = useState(null);
+
   const createMarkup = (htmlContent) => {
     return { __html: DOMPurify.sanitize(htmlContent) };
   };
@@ -34,35 +34,36 @@ const CollectionsPage = () => {
     setSelectedArticle(null);
   };
 
-  const exportArticle = async (userSourceIds) => {
+  const exportArticle = async (userSourceId) => {
+    console.log("User source ID sent for export:", userSourceId)
     try {
       const token = localStorage.getItem('token'); 
-      const response = await axios.post(
-        'https://api2.staging.bzpke.com/api/export/feeds',
-        { user_source_ids: userSourceIds },
+      const response = await axios.post('https://api2.staging.bzpke.com/api/export/feeds', 
+        {
+          user_source_ids: [userSourceId] // Send userSourceId in an array in the request body
+        }, 
         {
           headers: {
             'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json' 
           },
         }
       );
-      
+  
       if (response.status === 200) {
         alert('Article exported successfully!');
-        setExportResponse(response.data);
+        
       } else {
         alert('Failed to export the article.');
-        setExportResponse(null); 
       }
     } catch (error) {
       console.error('Error exporting article:', error);
       alert('Error exporting article.');
-      setExportResponse(null); 
     }
   };
   
   
+
   return (
     <div className="flex min-h-screen bg-gray-100">
       <Sidebar currentPage="/collections" />
@@ -91,15 +92,17 @@ const CollectionsPage = () => {
                           <div key={feed.id} className="mb-4 flex justify-between items-center">
                             <h3 className="text-xl font-semibold flex-grow">{feed.feed.title}</h3>
                             <button
-                              onClick={() => exportArticle(article.user_source_ids)}
+                              onClick={() => exportArticle(article.id)}
                               className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-4"
                             >
                               Export Article
                             </button>
                           </div>
+                          
                           <div dangerouslySetInnerHTML={createMarkup(feed.feed.content)} />
                           <p>Link: <a className='text-blue-800 underline' href={feed.feed.link} target="_blank" rel="noopener noreferrer">{feed.feed.link}</a></p>
                           <p>Published on: {feed.feed.pubdate}</p>
+
                         </div>
                       ))}
                     </>
