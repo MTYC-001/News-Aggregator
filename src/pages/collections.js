@@ -86,11 +86,11 @@ const CollectionsPage = () => {
                 <div className="p-4">
                   {displayMode === 'expanded' && (
                     <>
-                      <h2 className="text-2xl font-bold mb-2">{article.title}</h2>
+                      
                       {article.feeds.map(feed => (
                         <div key={feed.id} className="mb-4">
                           <div key={feed.id} className="mb-4 flex justify-between items-center">
-                            <h3 className="text-xl font-semibold flex-grow">{feed.feed.title}</h3>
+                            <h2 className="text-2xl font-bold mb-2">{article.title}</h2>
                             <button
                               onClick={() => exportArticle(article.id)}
                               className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-4"
@@ -98,7 +98,7 @@ const CollectionsPage = () => {
                               Export Article
                             </button>
                           </div>
-                          
+                          <h3 className="text-xl font-semibold flex-grow">{feed.feed.title}</h3>
                           <div dangerouslySetInnerHTML={createMarkup(feed.feed.content)} />
                           <p>Link: <a className='text-blue-800 underline' href={feed.feed.link} target="_blank" rel="noopener noreferrer">{feed.feed.link}</a></p>
                           <p>Published on: {feed.feed.pubdate}</p>
