@@ -14,8 +14,9 @@ export default function Home() {
   const router = useRouter();
   useEffect(() => {
     const token = process.env.NEXT_PUBLIC_API_TOKEN;
+    const apiPath = process.env.NEXT_PUBLIC_API_PATH;
   
-    fetch('https://api2.staging.bzpke.com/api/sources', {
+    fetch(`${apiPath}/api/sources`, {
       method: 'GET', 
       headers: {
         'Authorization': `Bearer ${token}`, // Use the actual token value here

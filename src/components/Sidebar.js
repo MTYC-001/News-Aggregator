@@ -4,6 +4,8 @@ import { useRouter } from 'next/router';
 import ArticleModal from '../components/ArticleModal'; // Make sure the path to ArticleModal is correct
 
 const Sidebar = ({ currentPage }) => {
+  const apiPath = process.env.NEXT_PUBLIC_API_PATH;
+
   const [inputValue, setInputValue] = useState('');
   const [searchResult, setSearchResult] = useState(null); // State to hold search result
   const router = useRouter();
@@ -11,7 +13,7 @@ const Sidebar = ({ currentPage }) => {
   const handleSearchSubmit = (event) => {
     event.preventDefault();
     const searchTerm = encodeURIComponent(inputValue);
-    fetch(`https://api2.staging.bzpke.com/api/search`, {
+    fetch(`${apiPath}/api/search`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

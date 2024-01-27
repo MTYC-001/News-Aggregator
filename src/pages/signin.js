@@ -3,6 +3,8 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 
 const SignIn = () => {
+  const apiPath = process.env.NEXT_PUBLIC_API_PATH;
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
@@ -11,7 +13,7 @@ const SignIn = () => {
     event.preventDefault();
     
     try {
-      const response = await fetch('https://api2.staging.bzpke.com/api/login', {
+      const response = await fetch(`${apiPath}/api/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),

@@ -7,6 +7,8 @@ import Image from 'next/image';
 import { useRouter } from 'next/router'; 
 
 export default function Home() {
+  const apiPath = process.env.NEXT_PUBLIC_API_PATH;
+
   const [articles, setArticles] = useState([]);
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -21,7 +23,7 @@ export default function Home() {
       return; // Early return to avoid running the code below
     }
   
-    fetch('https://api2.staging.bzpke.com/api/sources', {
+    fetch(`${apiPath}/api/sources`, {
       method: 'GET', 
       headers: {
         'Authorization': `Bearer ${token}`, // Use the actual token value here

@@ -5,6 +5,8 @@ import { useRouter } from 'next/router';
 
 {/*This is for handling sign up (Marvin Tan)*/}
 const SignUp = () => {
+  const apiPath = process.env.NEXT_PUBLIC_API_PATH;
+  
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -13,8 +15,8 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const apiUrl = 'https://api2.staging.bzpke.com/api/signup'; // Replace with your actual API endpoint URL
+    console.log('yoyo',process.env.NEXT_PUBLIC_API_PATH);
+    const apiUrl = `${apiPath}/api/signup`; // Replace with your actual API endpoint URL
 
     const user = {
       name: name,
