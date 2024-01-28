@@ -74,6 +74,11 @@ const Sidebar = ({ currentPage }) => {
             User&apos;s Collection
           </a>
         </Link>
+        <Link href="/sources">
+          <a className={`block py-2 hover:bg-blue-700 transition-colors duration-200 ${currentPage === '/sources' ? 'bg-blue-700' : ''}`}>
+            My Sources
+          </a>
+        </Link>
         <button
           onClick={handleLogout}
           className="mt-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full"
