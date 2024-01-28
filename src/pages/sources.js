@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import ArticleModal from '../components/ArticleModal';
 import Sidebar from '../components/Sidebar';
+import NewFolderForm from '../components/NewFolderForm';
+
 import Image from 'next/image';
 import { useRouter } from 'next/router'; 
 
@@ -13,10 +15,8 @@ export default function Sources() {
   const [selectedSourceId, setSelectedSourceId] = useState(null);
   const [feeds, setFeeds] = useState(null);
   const [browserUrl, setBrowserUrl] = useState(null);
-
+  const [showForm, setShowForm] = useState(false);
   
-
-
   useEffect(() => {
     // Check for token in localStorage
     const token = localStorage.getItem('token');
@@ -99,7 +99,7 @@ export default function Sources() {
 
   return (
     <div className="bg-gray-100 min-h-screen flex flex-col md:flex-row">
-      <Sidebar onSearch={handleSearch} currentPage="/sources" />
+      <Sidebar onSearch={handleSearch} currentPage="/sources" onAddNew={() => setShowForm(true)}/>
       <div className="flex-grow p-4 md:ml-64">
         <h1 className="text-2xl md:text-3xl font-semibold mb-4 md:mb-6">My Sources</h1>
         <div class="grid grid-cols-9 gap-4">
@@ -150,7 +150,11 @@ export default function Sources() {
             </div>
 
         </div>
-        
+        {showForm && (
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md m-auto">
+            <NewFolderForm onClose={() => setShowForm(false)} />
+          </div>
+        )}
       </div>
     </div>
   );

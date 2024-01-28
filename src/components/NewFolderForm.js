@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 const NewFolderForm = ({ onClose }) => {
+    const apiPath = process.env.NEXT_PUBLIC_API_PATH;
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [allArticles, setAllArticles] = useState([]);
@@ -35,7 +36,7 @@ const NewFolderForm = ({ onClose }) => {
     const fetchArticles = async () => {
       const token = localStorage.getItem('token'); // Retrieve the token from local storage or context
       try {
-        const response = await fetch('https://api2.staging.bzpke.com/api/sources', {
+        const response = await fetch(`${apiPath}/api/sources`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
@@ -72,7 +73,7 @@ const NewFolderForm = ({ onClose }) => {
     const token = localStorage.getItem('token');
 
     try {
-      const response = await fetch('https://api2.staging.bzpke.com/api/info/folder/add', {
+      const response = await fetch(`${apiPath}/api/info/folder/add`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
