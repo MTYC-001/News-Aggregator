@@ -15,6 +15,7 @@ export default function Sources() {
   const [userSources, setSources] = useState([]);
   const [selectedSource, setSelectedSource] = useState(null);
   const [feeds, setFeeds] = useState(null);
+  const [selectedFeedIds, setSelectedFeedIds] = useState([]);
   const [browserUrl, setBrowserUrl] = useState(null);
   const [selectedFeed, setSelectedFeed] = useState(null);
   const [showForm, setShowForm] = useState(false);
@@ -111,10 +112,38 @@ export default function Sources() {
     fetchFeeds(userSource.id);
   };
 
+  // const handleFeedClick = (feed) => {
+  //   setSelectedFeed(feed)
+  //   setBrowserUrl(feed.link);
+  // };
+  
   const handleFeedClick = (feed) => {
-    setSelectedFeed(feed)
-    setBrowserUrl(feed.link);
+    // Check if the Ctrl key is pressed (or Cmd key on Mac)
+    const isCtrlPressed = event.ctrlKey || event.metaKey;
+    // console.log('april shower',feed.id);
+    if (isCtrlPressed) {
+      // If Ctrl key is pressed, toggle the selected status of the feed
+      const updatedSelectedFeedIds = [...selectedFeedIds];
+      const index = updatedSelectedFeedIds.indexOf(feed.id);
+  
+      if (index === -1) {
+        // Feed not in the list, add it
+        updatedSelectedFeedIds.push(feed.id);
+      } else {
+        // Feed already in the list, remove it
+        updatedSelectedFeedIds.splice(index, 1);
+      }
+      console.log('multiple',updatedSelectedFeedIds);
+      setSelectedFeedIds(updatedSelectedFeedIds);
+    } else {
+      // If Ctrl key is not pressed, handle regular click behavior
+      // Your existing code for handling regular click
+      console.log('if everyone is not special',feed.id);
+      setSelectedFeed(feed);
+      // ... rest of the code
+    }
   };
+  
 
   const fetchFeeds = (sourceId) => {
     // Fetch feeds based on the selected source_id
@@ -140,6 +169,36 @@ export default function Sources() {
         console.error('Error fetching feeds:', error);
       });
   };
+
+  const handleExportApiCall = async () => {
+    // Use selectedFeedIds in your API call
+    const token = localStorage.getItem('token');
+    const dataToSend = {
+      feed_ids: selectedFeedIds,
+      // other data...
+    };
+    console.log('seikaiiiii',dataToSend);
+    // try {
+    //   const response = await fetch(`${apiPath}/your/api/endpoint`, {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       'Authorization': `Bearer ${token}`,
+    //     },
+    //     body: JSON.stringify(dataToSend),
+    //   });
+  
+    //   if (!response.ok) {
+    //     throw new Error(`HTTP error! status: ${response.status}`);
+    //   }
+  
+    //   const data = await response.json();
+    //   // Handle the API response as needed
+    // } catch (error) {
+    //   console.error('Error making API call:', error);
+    // }
+  };
+  
 
   return (
     <div className="bg-gray-100 min-h-screen flex flex-col md:flex-row">
@@ -186,7 +245,7 @@ export default function Sources() {
                 <ul class="divide-y divide-gray-100">
                 {feeds !== null && feeds.map((feed) => (
                     <li 
-                    className={`gap-x-6 py-5 divide-red-600 ${selectedFeed && feed.id === selectedFeed.id ? 'bg-blue-100' : ''}`}
+                    className={`gap-x-6 py-5 divide-red-600 ${selectedFeedIds && selectedFeedIds.includes(feed.id) ? 'bg-blue-100' : ''}`}
                     key={feed.id}
                     class="py-5 cursor-pointer"
                     
