@@ -12,7 +12,7 @@ export default function Sources() {
   const apiPath = process.env.NEXT_PUBLIC_API_PATH;
   const router = useRouter();
   const [userSources, setSources] = useState([]);
-  const [selectedSourceId, setSelectedSourceId] = useState(null);
+  const [selectedSource, setSelectedSource] = useState(null);
   const [feeds, setFeeds] = useState(null);
   const [browserUrl, setBrowserUrl] = useState(null);
   const [showForm, setShowForm] = useState(false);
@@ -25,8 +25,6 @@ export default function Sources() {
 
   const handlePageChange = (folderId) => {
     setSelectedFolderId(folderId);
-    console.log('koureuda!',folderId);
-
     const token = localStorage.getItem('token');
 
     fetch(`${apiPath}/api/info/folder/get/${folderId}`, {
@@ -97,10 +95,12 @@ export default function Sources() {
     );
   };
 
-  const handleSourceClick = (sourceId) => {
+  const handleSourceClick = (userSource) => {
     // Set the selected source_id and fetch feeds
-    setSelectedSourceId(sourceId);
-    fetchFeeds(sourceId);
+    // setSelectedSourceId(sourceId);
+    // fetchFeeds(sourceId);
+    setSelectedSource(userSource);
+    fetchFeeds(userSource.id);
   };
 
   const handleFeedClick = (feedUrl) => {
@@ -124,6 +124,7 @@ export default function Sources() {
         return response.json();
       })
       .then(data => {
+        console.log(data.feeds)
         setFeeds(data.feeds);
       })
       .catch(error => {
@@ -137,21 +138,24 @@ export default function Sources() {
         onSearch={handleSearch}
         currentPage="/sources"
         onAddNew={() => setShowForm(true)}
-        // onSelectFolder={handleSelectFolder} // Pass the onSelectFolder callback
         onPageChange={handlePageChange}
       />
+      
+
       <div className="flex-grow p-4 md:ml-64">
         <h1 className="text-2xl md:text-3xl font-semibold mb-4 md:mb-6">My Sources</h1>
+        
         <h2 className="text-xl font-semibold mb-6">Folder - {selectedFolderSources.title}</h2>
         
         <div class="grid grid-cols-9 gap-4">
-          <div class="col-span-3">
-              <ul className="divide-y divide-gray-100">
+          <div class="col-span-2" id="col-view-1">
+            <h3>Sources from Folder <b>{selectedFolderSources.title}</b></h3>
+              <ul className="divide-y divide-gray-400">
                 {selectedFolderSources.source && selectedFolderSources.source.map((userSource)=> (
                   <li
                   key={userSource}
-                  className="flex justify-between gap-x-6 py-5"
-                  onClick={() => handleSourceClick(userSource.id)}
+                  className="flex justify-between gap-x-6 py-5 divide-gray-400"
+                  onClick={() => handleSourceClick(userSource)}
                   style={{ cursor: 'pointer' }}
                 >
                   <div className="min-w-0 flex-auto">
@@ -166,22 +170,25 @@ export default function Sources() {
             </div>
             
 
-            <div class="col-span-3">
+            <div class="col-span-3" id="col-view-2">
+              <h3>Feeds from feeds <b>{selectedSource && selectedSource.title}</b></h3>
+
                 <ul class="divide-y divide-gray-100">
                 {feeds !== null && feeds.map((feed) => (
-                    <li
+                    <li className='py-5 divide-gray-800'
                     key={feed.id}
                     class="py-5 cursor-pointer"
                     onClick={() => handleFeedClick(feed.link)}
                     >
                     <p class="text-sm font-semibold leading-6 text-gray-900">{feed.title}</p>
                     <p class="mt-1 truncate text-xs leading-5 text-gray-500">{feed.description}</p>
+                    <p class="mt-1 truncate text-xs leading-5 text-gray-500">Published on: {feed.pubdate}</p>
                     </li>
                 ))}
                 </ul>
             </div>
 
-            <div class="col-span-3">
+            <div class="col-span-4">
                 {/* In-app browser */}
                 {browserUrl && (
                 <iframe

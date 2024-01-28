@@ -146,7 +146,7 @@
         </div>
 
         <nav className="flex flex-col flex-grow px-4">
-          <Link href="/">
+          {/* <Link href="/">
             <a className={`block py-2 hover:bg-blue-700 transition-colors duration-200 ${currentPage === '/' ? 'bg-blue-700' : ''}`}>
               Dashboard
             </a>
@@ -155,7 +155,7 @@
             <a className={`block py-2 hover:bg-blue-700 transition-colors duration-200 ${currentPage === '/collections' ? 'bg-blue-700' : ''}`}>
               User&apos;s Collection
             </a>
-          </Link>
+          </Link> */}
           
           <Link href="/sources">
             <a className={`block py-2 hover:bg-blue-700 transition-colors duration-200 ${currentPage === '/sources' ? 'bg-blue-700' : ''}`}>

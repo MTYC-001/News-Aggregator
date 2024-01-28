@@ -3,3 +3,32 @@
 @tailwind utilities;
 
 
+/* Apply styles to the container div */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(9, minmax(0, 1fr));
+    gap: 1rem;
+  }
+  
+  /* Make the first and second columns sticky */
+  #col-view-1 {
+    position: sticky;
+    top: 0;
+  }
+
+  #col-view-2 {
+    position: sticky;
+    top: 0;
+  }
+  
+  /* Apply styles to the second column */
+  .col-span-3:nth-child(2) {
+    position: sticky;
+    top: 0;
+  }
+  
+  /* Add background color to the selected item in the first column */
+  .col-span-3 .selected {
+    background-color: #dcdcdc; /* Use your desired darker color */
+  }
+  
