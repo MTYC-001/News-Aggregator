@@ -7,7 +7,7 @@
       }
     ],
     "routes": [
-      { "src": "/", "dest": "/index" },
+      { "src": "/", "dest": "/sources" },
       { "src": "/collections", "dest": "/collections" },
       { "src": "/signup", "dest": "/signup" },
       { "src": "/signin", "dest": "/signin" }

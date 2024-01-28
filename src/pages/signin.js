@@ -23,7 +23,7 @@ const SignIn = () => {
         const data = await response.json();
         // Update here: Store the access token correctly
         localStorage.setItem('token', data.token.access_token); // Store the access token
-        router.push('/'); // Redirect to the homepage/dashboard
+        router.push('/sources'); // Temporary point to this page (Jiayue)
       } else {
         // If the response is not OK, handle the error
         const errorData = await response.json();
