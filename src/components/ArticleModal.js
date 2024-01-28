@@ -3,6 +3,7 @@ import axios from 'axios';
 import Link from 'next/link';
 
 const ArticleModal = ({ article, onClose }) => {
+  const apiPath = process.env.NEXT_PUBLIC_API_PATH;
   const author = article.author ? article.author[0] : null;
 
   const addToCollection = async () => {
@@ -10,7 +11,7 @@ const ArticleModal = ({ article, onClose }) => {
     try {
       const token = localStorage.getItem('token'); // Get token from local storage
       const response = await axios.post(
-        'https://api2.staging.bzpke.com/api/source/add',
+        `${apiPath}/api/source/add`,
         {
           url: article.url // Send the article's URL
         },

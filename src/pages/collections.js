@@ -13,6 +13,8 @@ const CollectionsPage = () => {
     return { __html: DOMPurify.sanitize(htmlContent) };
   };
 
+  const apiPath = process.env.NEXT_PUBLIC_API_PATH;
+
   useEffect(() => {
     const collectionData = localStorage.getItem('userCollection');
     if (collectionData) {
@@ -38,7 +40,7 @@ const CollectionsPage = () => {
     console.log("User source ID sent for export:", userSourceId);
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post('https://api2.staging.bzpke.com/api/export/feeds', 
+      const response = await axios.post(`${apiPath}/api/export/feeds`, 
         {
           user_source_ids: [userSourceId]
         }, 
