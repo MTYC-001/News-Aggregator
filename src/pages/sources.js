@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import ArticleModal from '../components/ArticleModal';
 import Sidebar from '../components/Sidebar';
 import NewFolderForm from '../components/NewFolderForm';
-
+import DOMPurify from 'dompurify';
 import Image from 'next/image';
 import { useRouter } from 'next/router'; 
 
@@ -15,9 +15,14 @@ export default function Sources() {
   const [selectedSource, setSelectedSource] = useState(null);
   const [feeds, setFeeds] = useState(null);
   const [browserUrl, setBrowserUrl] = useState(null);
+  const [selectedFeed, setSelectedFeed] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [selectedFolderSources, setSelectedFolderSources] = useState([]);
   const [selectedFolderId, setSelectedFolderId] = useState(null);
+
+  const createMarkup = (htmlContent) => {
+    return { __html: DOMPurify.sanitize(htmlContent) };
+  };
 
   const handleSelectFolder = (folderSources) => {
     setSelectedFolderSources(folderSources);
@@ -103,8 +108,9 @@ export default function Sources() {
     fetchFeeds(userSource.id);
   };
 
-  const handleFeedClick = (feedUrl) => {
-    setBrowserUrl(feedUrl);
+  const handleFeedClick = (feed) => {
+    setSelectedFeed(feed)
+    setBrowserUrl(feed.link);
   };
 
   const fetchFeeds = (sourceId) => {
@@ -149,12 +155,12 @@ export default function Sources() {
         
         <div class="grid grid-cols-9 gap-4">
           <div class="col-span-2" id="col-view-1">
-            <h3>Sources from Folder <b>{selectedFolderSources.title}</b></h3>
+            <h3>Sources from Folder - <b>{selectedFolderSources.title}</b></h3>
               <ul className="divide-y divide-gray-400">
                 {selectedFolderSources.source && selectedFolderSources.source.map((userSource)=> (
                   <li
                   key={userSource}
-                  className="flex justify-between gap-x-6 py-5 divide-gray-400"
+                  className={`flex justify-between gap-x-6 py-5 divide-gray-400 ${selectedSource && userSource.id === selectedSource.id ? 'bg-blue-100' : ''}`}
                   onClick={() => handleSourceClick(userSource)}
                   style={{ cursor: 'pointer' }}
                 >
@@ -169,16 +175,17 @@ export default function Sources() {
               </ul>
             </div>
             
-
-            <div class="col-span-3" id="col-view-2">
-              <h3>Feeds from feeds <b>{selectedSource && selectedSource.title}</b></h3>
+            <div class="col-span-3">
+              <h3 className='divide-black-400 m3'>Feeds from source <b>{selectedSource && selectedSource.title}</b></h3>
 
                 <ul class="divide-y divide-gray-100">
                 {feeds !== null && feeds.map((feed) => (
-                    <li className='py-5 divide-gray-800'
+                    <li 
+                    className={`gap-x-6 py-5 divide-red-600 ${selectedFeed && feed.id === selectedFeed.id ? 'bg-blue-100' : ''}`}
                     key={feed.id}
                     class="py-5 cursor-pointer"
-                    onClick={() => handleFeedClick(feed.link)}
+                    
+                    onClick={() => handleFeedClick(feed)}
                     >
                     <p class="text-sm font-semibold leading-6 text-gray-900">{feed.title}</p>
                     <p class="mt-1 truncate text-xs leading-5 text-gray-500">{feed.description}</p>
@@ -188,16 +195,32 @@ export default function Sources() {
                 </ul>
             </div>
 
-            <div class="col-span-4">
+            {selectedFeed &&
+              <div class="col-span-4">
+                <h3 className='divide-black-400 m-3'>Content from article <b>{selectedFeed && selectedFeed.title}</b></h3>
                 {/* In-app browser */}
-                {browserUrl && (
+                {/* {browserUrl && (
                 <iframe
                     src={browserUrl}
                     title="In-App Browser"
                     className="w-full h-full border"
                 />
-                )}
-            </div>
+                )} */}
+                <h4 className='text-l md:text-xl font-semibold mb-4 md:mb-6'>{selectedFeed.title}</h4>
+                <p className='m-2' >Go to source : 
+                  <a className='m-2' href={selectedFeed.source.url}>
+                    <b>{selectedFeed.source.title}</b>
+                  </a>
+                </p>
+                <p className='m-2' > View original article:
+                  <a href={selectedFeed.link} className="text-sm font-semibold m-2" target="_blank" rel="noopener noreferrer">{selectedFeed.link}
+                  </a>
+                </p>
+                <div dangerouslySetInnerHTML={selectedFeed && createMarkup(selectedFeed.content)} />
+
+              </div>
+            }
+            
 
         </div>
         {showForm && (
