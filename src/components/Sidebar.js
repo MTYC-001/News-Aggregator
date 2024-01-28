@@ -1,13 +1,79 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect  } from 'react';
+import { useContextMenu } from 'react-contexify';
+
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import ArticleModal from '../components/ArticleModal'; // Make sure the path to ArticleModal is correct
-
-const Sidebar = ({ currentPage }) => {
+import NewFolderForm from '../components/NewFolderForm';
+const Sidebar = ({ currentPage, onAddNew }) => {
   const [inputValue, setInputValue] = useState('');
   const [searchResult, setSearchResult] = useState(null); // State to hold search result
+  const [showForm, setShowForm] = useState(false);
   const router = useRouter();
-
+  const [folders, setFolders] = useState([]);
+  const { show } = useContextMenu({
+    id: "folder-menu",
+  });
+  const handleCloseForm = () => {
+    setShowForm(false);
+  };
+  const handleOpenForm = () => {
+    setShowForm(true);
+  };
+    // Fetch folders from the API
+    useEffect(() => {
+      const fetchFolders = async () => {
+        const token = localStorage.getItem('token');
+        const response = await fetch('https://api2.staging.bzpke.com/api/info/folders', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        const data = await response.json();
+        if (data.code === '000') {
+          setFolders(data.info);
+        } else {
+          console.error('Failed to fetch folders:', data.message);
+        }
+      };
+      fetchFolders();
+    }, []);
+  
+    const handleDeleteFolder = async (folderId) => {
+      const confirmDelete = window.confirm('Are you sure you want to delete this folder?');
+      if (confirmDelete) {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`https://api2.staging.bzpke.com/api/info/folder/delete/${folderId}`, {
+          method: 'POST', 
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+    
+        const data = await response.json();
+        console.log('Delete response:', data);
+    
+        if (response.ok) {
+          setFolders(folders.filter(folder => folder.id !== folderId));
+          alert('Folder deleted successfully');
+        } else {
+          console.error('Failed to delete folder:', data.message);
+          alert('Failed to delete folder: ' + data.message);
+        }
+      }
+    };
+    
+  
+    // Right-click handler
+    const onContextMenu = (event, folderId) => {
+      event.preventDefault();
+      show(event, {
+        props: {
+          folderId,
+        }
+      });
+    };
   const handleSearchSubmit = (event) => {
     event.preventDefault();
     const searchTerm = encodeURIComponent(inputValue);
@@ -72,17 +138,37 @@ const Sidebar = ({ currentPage }) => {
             User&apos;s Collection
           </a>
         </Link>
+        <div className='py-4 mt-8 bg-blue-500 rounded-xl'>
+          <h1>Feeds</h1>
+          {folders.map(folder => (
+          
+          <div
+            key={folder.id}
+            onClick={() => handleDeleteFolder(folder.id)}
+            className="flex justify-between items-center p-2 hover:bg-blue-700 cursor-pointer"
+          >
+            {console.log(folder.id)}
+            {folder.title}
+          </div>
+        ))}
+        </div>
         <button
           onClick={handleLogout}
           className="mt-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full"
         >
           Logout
         </button>
+        <button onClick={onAddNew} className="rounded-xl bg-blue-900 h-9">
+                    + Add new
+        </button>
       </nav>
 
       {searchResult && (
         <ArticleModal article={searchResult} onClose={() => setSearchResult(null)} />
       )}
+      {showForm && <NewFolderForm onClose={handleCloseForm} />}
+      
+
     </div>
   );
 };

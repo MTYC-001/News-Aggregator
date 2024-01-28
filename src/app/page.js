@@ -6,11 +6,13 @@ import Sidebar from '../components/Sidebar';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import '../src/app/globals.css';
+import NewFolderForm from '../components/NewFolderForm';
 {/*This is the Home page (Marvin Tan)*/}
 export default function Home() {
   const [articles, setArticles] = useState([]);
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [showForm, setShowForm] = useState(false);
   const router = useRouter();
   useEffect(() => {
     const token = process.env.NEXT_PUBLIC_API_TOKEN;
@@ -150,6 +152,11 @@ const filteredArticles = selectedCategory === 'All'
 
         {selectedArticle && (
           <ArticleModal article={selectedArticle} onClose={handleCloseModal} />
+        )}
+        {showForm && (
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md m-auto">
+            <NewFolderForm onClose={() => setShowForm(false)} />
+          </div>
         )}
       </div>
     </div>

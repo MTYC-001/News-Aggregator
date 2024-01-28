@@ -5,11 +5,12 @@ import ArticleModal from '../components/ArticleModal';
 import Sidebar from '../components/Sidebar';
 import Image from 'next/image';
 import { useRouter } from 'next/router'; 
-
+import NewFolderForm from '../components/NewFolderForm';
 export default function Home() {
   const [articles, setArticles] = useState([]);
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [showForm, setShowForm] = useState(false);
   const router = useRouter();
   useEffect(() => {
     // Check for token in localStorage
@@ -103,7 +104,7 @@ const filteredArticles = selectedCategory === 'All'
 
   return (
     <div className="bg-gray-100 min-h-screen flex flex-col md:flex-row">
-      <Sidebar onSearch={handleSearch} currentPage="/" />
+      <Sidebar onSearch={handleSearch} currentPage="/" onAddNew={() => setShowForm(true)} />
       <div className="flex-grow p-4 md:ml-64">
         <h1 className="text-2xl md:text-3xl font-semibold mb-4 md:mb-6">Dashboard</h1>
 
@@ -161,6 +162,11 @@ const filteredArticles = selectedCategory === 'All'
 
         {selectedArticle && (
           <ArticleModal article={selectedArticle} onClose={handleCloseModal} />
+        )}
+        {showForm && (
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md m-auto">
+            <NewFolderForm onClose={() => setShowForm(false)} />
+          </div>
         )}
       </div>
     </div>
