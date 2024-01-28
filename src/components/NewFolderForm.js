@@ -46,7 +46,9 @@ const NewFolderForm = ({ onClose }) => {
         }
         const data = await response.json();
         if (data.code === '000') {
-          setAllArticles(data.sources.flatMap(source => source.source)); // Flatten the nested sources array
+          console.log('shura',data.sources);
+          setAllArticles(data.sources);
+          // setAllArticles(data.sources.flatMap(source => source.source)); // Flatten the nested sources array
         } else {
           console.error('Failed to fetch articles: ' + data.message);
         }

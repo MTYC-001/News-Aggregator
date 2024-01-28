@@ -33,6 +33,7 @@
           });
           const data = await response.json();
           if (data.code === '000') {
+            console.log('foldersss',data.info);
             setFolders(data.info);
           } else {
             console.error('Failed to fetch folders:', data.message);
@@ -140,12 +141,27 @@
               User&apos;s Collection
             </a>
           </Link>
+          
           <Link href="/sources">
             <a className={`block py-2 hover:bg-blue-700 transition-colors duration-200 ${currentPage === '/sources' ? 'bg-blue-700' : ''}`}>
               My Sources
             </a>
           </Link>
-          <button onClick={onAddNew} className="rounded-xl bg-blue-900 h-9">
+          <div className='py-4 mt-8 bg-blue-500 rounded-xl'>
+            <h1>Feeds</h1>
+              {folders.map(folder => (
+                <div
+                  key={folder.id}
+                  onClick={() => handleDeleteFolder(folder.id)}
+                  className="flex justify-between items-center p-2 hover:bg-blue-700 cursor-pointer"
+                >
+                {console.log(folder.id)}
+                {folder.title}
+              </div>
+              ))
+              }
+        </div>
+          <button onClick={onAddNew} className="rounded-xl bg-blue-900 h-9 m-3">
                       + Add new
           </button>
           <button
