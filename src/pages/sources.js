@@ -139,6 +139,7 @@ export default function Sources() {
       // If Ctrl key is not pressed, handle regular click behavior
       // Your existing code for handling regular click
       console.log('if everyone is not special',feed.id);
+      // setSelectedFeedIds(feed.id)
       setSelectedFeed(feed);
       // ... rest of the code
     }
@@ -225,7 +226,8 @@ export default function Sources() {
                 {selectedFolderSources.source && selectedFolderSources.source.map((userSource)=> (
                   <li
                   key={userSource}
-                  className={`flex justify-between gap-x-6 py-5 divide-gray-400 ${selectedSource && userSource.id === selectedSource.id ? 'bg-blue-100' : ''}`}
+                  className={`flex justify-between gap-x-6 py-5 divide-gray-400 
+                    ${(selectedSource && userSource.id === selectedSource.id)? 'bg-blue-100' : ''}`}
                   onClick={() => handleSourceClick(userSource)}
                   style={{ cursor: 'pointer' }}
                 >
@@ -241,11 +243,20 @@ export default function Sources() {
             
             <div class="col-span-3">
               <h3 className='divide-black-400 m3'>Feeds from source <b>{selectedSource && selectedSource.title}</b></h3>
+              {selectedFeedIds.length > 0 && (
+                <button
+                  onClick={handleExportApiCall}
+                  className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded inline-flex items-center"
+                >
+                  Export Selected Feeds
+                </button>
+              )}
 
                 <ul class="divide-y divide-gray-100">
                 {feeds !== null && feeds.map((feed) => (
                     <li 
-                    className={`gap-x-6 py-5 divide-red-600 ${selectedFeedIds && selectedFeedIds.includes(feed.id) ? 'bg-blue-100' : ''}`}
+                    className={`gap-x-6 py-5 divide-red-600 
+                    ${(selectedFeedIds && selectedFeedIds.includes(feed.id))||(selectedFeed && feed.id === selectedFeed.id)  ? 'bg-blue-100' : ''}`}
                     key={feed.id}
                     class="py-5 cursor-pointer"
                     
