@@ -168,7 +168,6 @@ export default function Sources() {
                     <p className="text-sm font-semibold leading-6 text-gray-900">{userSource.title}</p>
                     <p className="mt-1 truncate text-xs leading-5 text-gray-500">{userSource.description}</p>
                     <p className="mt-1 truncate text-xs leading-5 text-gray-500">{userSource.url}</p>
-                    <p className="mt-1 truncate text-xs leading-5 text-gray-500">{userSource.id}</p>
                   </div>
                 </li>
                 ))}
