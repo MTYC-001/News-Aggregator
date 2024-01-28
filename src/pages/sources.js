@@ -192,30 +192,29 @@ export default function Sources() {
   const handleExportApiCall = async () => {
     // Use selectedFeedIds in your API call
     const token = localStorage.getItem('token');
-    const dataToSend = {
+    const feed_ids = {
       feed_ids: selectedFeedIds,
-      // other data...
     };
-    console.log('seikaiiiii', dataToSend);
-    // try {
-    //   const response = await fetch(`${apiPath}/your/api/endpoint`, {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //       'Authorization': `Bearer ${token}`,
-    //     },
-    //     body: JSON.stringify(dataToSend),
-    //   });
-
-    //   if (!response.ok) {
-    //     throw new Error(`HTTP error! status: ${response.status}`);
-    //   }
-
-    //   const data = await response.json();
-    //   // Handle the API response as needed
-    // } catch (error) {
-    //   console.error('Error making API call:', error);
-    // }
+    console.log('seikaiiiii', JSON.stringify(feed_ids));
+    try {
+      const response = await fetch(`${apiPath}/api/export/feeds`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(feed_ids),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      // Handle the API response as needed
+      console.log('API response:', data);
+    } catch (error) {
+      console.error('Error making API call:', error);
+    }
   };
 
 
