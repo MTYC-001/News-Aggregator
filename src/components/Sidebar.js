@@ -5,7 +5,7 @@
   import { useRouter } from 'next/router';
   import ArticleModal from '../components/ArticleModal'; // Make sure the path to ArticleModal is correct
   import NewFolderForm from '../components/NewFolderForm';
-  const Sidebar = ({ currentPage, onAddNew }) => {
+  const Sidebar = ({ currentPage, onAddNew, onPageChange}) => {
     const apiPath = process.env.NEXT_PUBLIC_API_PATH;
 
     const [inputValue, setInputValue] = useState('');
@@ -33,7 +33,7 @@
           });
           const data = await response.json();
           if (data.code === '000') {
-            console.log('foldersss',data.info);
+            // console.log('foldersss',data.info);
             setFolders(data.info);
           } else {
             console.error('Failed to fetch folders:', data.message);
@@ -65,6 +65,21 @@
             alert('Failed to delete folder: ' + data.message);
           }
         }
+      };
+
+      const handleShowSourcesFromFolder = async (folderId) => {
+        // const confirmDelete = window.confirm('Are you sure you want to delete this folder?');
+        // const token = localStorage.getItem('token');
+        // const response = await fetch(`${apiPath}/api/info/folder/get/${folderId}`, {
+        //   method: 'GET', 
+        //   headers: {
+        //     'Authorization': `Bearer ${token}`,
+        //     'Content-Type': 'application/json'
+        //   }
+        // });
+        // const data = await response.json();
+        // console.log('yorooo',data.info)
+        onPageChange(folderId);
       };
       
     
@@ -148,14 +163,14 @@
             </a>
           </Link>
           <div className='py-4 mt-8 bg-blue-500 rounded-xl'>
-            <h1>Feeds</h1>
+            <h1>My Folders</h1>
               {folders.map(folder => (
                 <div
                   key={folder.id}
-                  onClick={() => handleDeleteFolder(folder.id)}
+                  onClick={() => handleShowSourcesFromFolder(folder.id)}
                   className="flex justify-between items-center p-2 hover:bg-blue-700 cursor-pointer"
                 >
-                {console.log(folder.id)}
+                {/* {console.log(folder.id)} */}
                 {folder.title}
               </div>
               ))

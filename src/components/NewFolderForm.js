@@ -46,7 +46,7 @@ const NewFolderForm = ({ onClose }) => {
         }
         const data = await response.json();
         if (data.code === '000') {
-          console.log('shura',data.sources);
+          // console.log('shura',data.sources);
           setAllArticles(data.sources);
           // setAllArticles(data.sources.flatMap(source => source.source)); // Flatten the nested sources array
         } else {

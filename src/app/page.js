@@ -33,7 +33,7 @@ export default function Home() {
     })
     .then(data => {
       // Handle the data
-      console.log(data);
+      // console.log(data);
       // Assuming the articles are nested within the 'sources' structure
       const fetchedArticles = data.sources.map(source => source.source).flat();
       setArticles(fetchedArticles);

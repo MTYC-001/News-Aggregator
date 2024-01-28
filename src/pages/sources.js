@@ -16,6 +16,41 @@ export default function Sources() {
   const [feeds, setFeeds] = useState(null);
   const [browserUrl, setBrowserUrl] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const [selectedFolderSources, setSelectedFolderSources] = useState([]);
+  const [selectedFolderId, setSelectedFolderId] = useState(null);
+
+  const handleSelectFolder = (folderSources) => {
+    setSelectedFolderSources(folderSources);
+  };
+
+  const handlePageChange = (folderId) => {
+    setSelectedFolderId(folderId);
+    console.log('koureuda!',folderId);
+
+    const token = localStorage.getItem('token');
+
+    fetch(`${apiPath}/api/info/folder/get/${folderId}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('sources from folder',data.info);
+        const selectedFolderSources = data.info
+        setSelectedFolderSources(selectedFolderSources);
+      })
+      .catch(error => {
+        console.error('Error fetching feeds:', error);
+      });
+
+  };
   
   useEffect(() => {
     // Check for token in localStorage
@@ -63,7 +98,6 @@ export default function Sources() {
   };
 
   const handleSourceClick = (sourceId) => {
-    console.log('pojito',sourceId)
     // Set the selected source_id and fetch feeds
     setSelectedSourceId(sourceId);
     fetchFeeds(sourceId);
@@ -99,29 +133,38 @@ export default function Sources() {
 
   return (
     <div className="bg-gray-100 min-h-screen flex flex-col md:flex-row">
-      <Sidebar onSearch={handleSearch} currentPage="/sources" onAddNew={() => setShowForm(true)}/>
+      <Sidebar
+        onSearch={handleSearch}
+        currentPage="/sources"
+        onAddNew={() => setShowForm(true)}
+        // onSelectFolder={handleSelectFolder} // Pass the onSelectFolder callback
+        onPageChange={handlePageChange}
+      />
       <div className="flex-grow p-4 md:ml-64">
         <h1 className="text-2xl md:text-3xl font-semibold mb-4 md:mb-6">My Sources</h1>
+        <h2 className="text-xl font-semibold mb-6">Folder - {selectedFolderSources.title}</h2>
+        
         <div class="grid grid-cols-9 gap-4">
-            <div class="col-span-3">
-                <ul class="divide-y divide-gray-100">
-                    {userSources.map((userSource) => (
-                        <li
-                        key={userSource.id}
-                        class="flex justify-between gap-x-6 py-5"
-                        onClick={() => handleSourceClick(userSource.id)}
-                        style={{ cursor: 'pointer' }}
-                        >
-                            <div class="min-w-0 flex-auto">
-                                <p class="text-sm font-semibold leading-6 text-gray-900">{userSource.title}</p>
-                                <p class="mt-1 truncate text-xs leading-5 text-gray-500">{userSource.description}</p>
-                                <p class="mt-1 truncate text-xs leading-5 text-gray-500">{userSource.url}</p>
-                                <p class="mt-1 truncate text-xs leading-5 text-gray-500">{userSource.id}</p>
-                            </div>
-                        </li>
-                    ))}
-                </ul>
+          <div class="col-span-3">
+              <ul className="divide-y divide-gray-100">
+                {selectedFolderSources.source && selectedFolderSources.source.map((userSource)=> (
+                  <li
+                  key={userSource}
+                  className="flex justify-between gap-x-6 py-5"
+                  onClick={() => handleSourceClick(userSource.id)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <div className="min-w-0 flex-auto">
+                    <p className="text-sm font-semibold leading-6 text-gray-900">{userSource.title}</p>
+                    <p className="mt-1 truncate text-xs leading-5 text-gray-500">{userSource.description}</p>
+                    <p className="mt-1 truncate text-xs leading-5 text-gray-500">{userSource.url}</p>
+                    <p className="mt-1 truncate text-xs leading-5 text-gray-500">{userSource.id}</p>
+                  </div>
+                </li>
+                ))}
+              </ul>
             </div>
+            
 
             <div class="col-span-3">
                 <ul class="divide-y divide-gray-100">
