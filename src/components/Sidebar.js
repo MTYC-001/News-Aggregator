@@ -1,5 +1,6 @@
   import React, { useState, useEffect  } from 'react';
   import { useContextMenu } from 'react-contexify';
+  import { FaEdit, FaTrash } from 'react-icons/fa';
 
   import Link from 'next/link';
   import { useRouter } from 'next/router';
@@ -163,19 +164,19 @@
             </a>
           </Link>
           <div className='py-4 mt-8 bg-blue-500 rounded-xl'>
-            <h1>My Folders</h1>
-              {folders.map(folder => (
-                <div
-                  key={folder.id}
-                  onClick={() => handleShowSourcesFromFolder(folder.id)}
-                  className="flex justify-between items-center p-2 hover:bg-blue-700 cursor-pointer"
-                >
-                {/* {console.log(folder.id)} */}
-                {folder.title}
+            <h1 className='m-2 border-b-2'>My Folders</h1>
+            {folders.map(folder => (
+              <div key={folder.id} className="flex justify-between items-center p-2 hover:bg-blue-700 cursor-pointer">
+                <span onClick={() => handleShowSourcesFromFolder(folder.id)}>
+                  {folder.title}
+                </span>
+                <div className="flex gap-2">
+                  <FaEdit onClick={() => handleUpdateFolder(folder.id)} className="cursor-pointer text-white" />
+                  <FaTrash onClick={() => handleDeleteFolder(folder.id)} className="cursor-pointer text-white" />
+                </div>
               </div>
-              ))
-              }
-        </div>
+            ))}
+          </div>
           <button onClick={onAddNew} className="rounded-xl bg-blue-900 h-9 m-3">
                       + Add new
           </button>

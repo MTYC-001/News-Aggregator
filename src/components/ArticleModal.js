@@ -7,13 +7,13 @@ const ArticleModal = ({ article, onClose }) => {
   const author = article.author ? article.author[0] : null;
 
   const addToCollection = async () => {
-    console.log("url: " + article.url)
+    console.log("url: " + article.rss_url)
     try {
       const token = localStorage.getItem('token'); // Get token from local storage
       const response = await axios.post(
         `${apiPath}/api/source/add`,
         {
-          url: article.url // Send the article's URL
+          url: article.rss_url // Send the article's URL
         },
         {
           headers: {
@@ -51,6 +51,7 @@ const ArticleModal = ({ article, onClose }) => {
           )}
           <p className="text-gray-700 mb-4">{article.description || 'No description available.'}</p>
           <p className="text-gray-500">Link: <a href={article.link} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{article.link}</a></p>
+          <p className="text-gray-500">RSS Subscribe Link: <a href={article.link} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{article.rss_url}</a></p>
           <button
             onClick={addToCollection}
             className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded mt-4"
