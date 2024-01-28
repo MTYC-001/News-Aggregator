@@ -2,6 +2,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import ArticleModal from '../components/ArticleModal';
+import { FaEdit, FaTrash } from 'react-icons/fa';
 import Sidebar from '../components/Sidebar';
 import NewFolderForm from '../components/NewFolderForm';
 import DOMPurify from 'dompurify';
@@ -17,6 +18,8 @@ export default function Sources() {
   const [browserUrl, setBrowserUrl] = useState(null);
   const [selectedFeed, setSelectedFeed] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const [showUpdateForm, setShowUpdateForm] = useState(false);
+
   const [selectedFolderSources, setSelectedFolderSources] = useState([]);
   const [selectedFolderId, setSelectedFolderId] = useState(null);
 
@@ -156,6 +159,9 @@ export default function Sources() {
         <div class="grid grid-cols-9 gap-4">
           <div class="col-span-2" id="col-view-1">
             <h3>Sources from Folder - <b>{selectedFolderSources.title}</b></h3>
+            {/* <button onClick={handleAddNewSourceToFolder} className="rounded-xl bg-blue-900 h-9 m-3">
+                      + Add Sources
+            </button> */}
               <ul className="divide-y divide-gray-400">
                 {selectedFolderSources.source && selectedFolderSources.source.map((userSource)=> (
                   <li
