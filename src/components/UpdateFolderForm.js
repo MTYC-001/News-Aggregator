@@ -6,9 +6,40 @@ const UpdateFolderForm = ({ onClose, folderId }) => {
     const [searchResults, setSearchResults] = useState([]);
     const [allArticles, setAllArticles] = useState([]);
     const [selectedSources, setSelectedSources] = useState([]);
+    const [folderDetails, setFolderDetails] = useState({
+      title: '',
+      description: '',
+      references: '',
+      source_ids: [],
+    });
+      // Fetch the folder details and its sources
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const fetchFolderSources = async () => {
+      const response = await fetch(`${apiPath}/api/info/folder/get/${folderId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      if (data.code === '000') {
+        setFolderDetails({
+          title: data.info.title,
+          description: data.info.description,
+          references: data.info.references,
+          source_ids: data.info.source.map(src => src.id),
+        });
+        setSelectedSources(data.info.source);
+      } else {
+        console.error('Failed to fetch folder sources:', data.message);
+      }
+    };
+
+    fetchFolderSources();
+  }, [folderId, apiPath]);
     const handleSourceSelect = (article) => {
-        if (!newFolder.source_ids.includes(article.id)) {
-          setNewFolder((prevState) => ({
+        if (!folderDetails.source_ids.includes(article.id)) {
+          setFolderDetails((prevState) => ({
             ...prevState,
             source_ids: [...prevState.source_ids, article.id]
           }));
@@ -19,18 +50,13 @@ const UpdateFolderForm = ({ onClose, folderId }) => {
       };
     
       const handleSourceRemove = (sourceId) => {
-        setNewFolder((prevState) => ({
+        setFolderDetails((prevState) => ({
           ...prevState,
           source_ids: prevState.source_ids.filter(id => id !== sourceId)
         }));
         setSelectedSources((prevSelected) => prevSelected.filter(source => source.id !== sourceId));
       };
-  const [newFolder, setNewFolder] = useState({
-    title: '',
-    description: '',
-    references: '',
-    source_ids: [],
-  });
+
   useEffect(() => {
     // Fetch all articles when the component mounts
     const fetchArticles = async () => {
@@ -103,11 +129,11 @@ const UpdateFolderForm = ({ onClose, folderId }) => {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setNewFolder({ ...newFolder, [name]: value });
+    setFolderDetails({ ...newFolder, [name]: value });
   };
 
   const handleSourceIdChange = (sourceId, add) => {
-    setNewFolder((prevState) => {
+    setFolderDetails((prevState) => {
       const sourceIds = new Set(prevState.source_ids);
       if (add) {
         sourceIds.add(sourceId);
@@ -117,38 +143,30 @@ const UpdateFolderForm = ({ onClose, folderId }) => {
       return { ...prevState, source_ids: Array.from(sourceIds) };
     });
   };
+  // Function to handle updates to the folder
   const handleUpdateFolder = async (event) => {
     event.preventDefault();
     const token = localStorage.getItem('token');
-    const queryParams = new URLSearchParams(newFolder);
+    const updatedFolder = {
+      ...folderDetails,
+      source_ids: selectedSources.map(src => src.id),
+    };
 
-    const url = `${apiPath}/api/info/folder/update/${folderId}?${queryParams.toString()}`;
-    console.log(url)
-    try {
-      const response = await fetch(url, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ source_ids: newFolder.source_ids }),
-      });
+    const response = await fetch(`${apiPath}/api/info/folder/update/${folderId}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedFolder),
+    });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      if (data.code === '000') {
-        alert('Folder updated successfully');
-        window.location.reload(false);
-        onClose();
-      } else {
-        alert(`Failed to update folder: ${data.message}`);
-      }
-    } catch (error) {
-      console.error('Error updating folder:', error);
-      alert('Error updating folder.');
+    const data = await response.json();
+    if (data.code === '000') {
+      alert('Folder updated successfully');
+      onClose(); // You might want to refresh the data or navigate away
+    } else {
+      alert(`Failed to update folder: ${data.message}`);
     }
   };
   
@@ -162,7 +180,7 @@ const UpdateFolderForm = ({ onClose, folderId }) => {
             id="title"
             name="title"
             type="text"
-            value={newFolder.title}
+            value={folderDetails.title}
             onChange={handleChange}
             className="w-full border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 rounded-md shadow-sm"
           />
@@ -172,7 +190,7 @@ const UpdateFolderForm = ({ onClose, folderId }) => {
           <textarea
             id="description"
             name="description"
-            value={newFolder.description}
+            value={folderDetails.description}
             onChange={handleChange}
             className="w-full border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 rounded-md shadow-sm"
           />
@@ -183,7 +201,7 @@ const UpdateFolderForm = ({ onClose, folderId }) => {
             id="references"
             name="references"
             type="text"
-            value={newFolder.references}
+            value={folderDetails.references}
             onChange={handleChange}
             className="w-full border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 rounded-md shadow-sm"
           />
@@ -211,19 +229,19 @@ const UpdateFolderForm = ({ onClose, folderId }) => {
           </ul>
         </div>
         <div className="flex flex-wrap gap-2 mb-4">
-          {selectedSources.map((source) => (
-            <div key={source.id} className="bg-blue-100 rounded p-2 flex items-center gap-2">
-              {source.title}
-              <button
-                type="button"
-                onClick={() => handleSourceRemove(source.id)}
-                className="text-sm bg-red-200 rounded-full px-2"
-              >
-                &times;
-              </button>
-            </div>
-          ))}
-        </div>
+        {selectedSources.map(source => (
+          <div key={source.id} className="bg-blue-100 rounded p-2 flex items-center gap-2">
+            {source.title}
+            <button
+              type="button"
+              onClick={() => handleSourceRemove(source.id)}
+              className="text-sm bg-red-200 rounded-full px-2"
+            >
+              &times;
+            </button>
+          </div>
+        ))}
+      </div>
         <div className="flex justify-end gap-4">
           <button
             type="button"
