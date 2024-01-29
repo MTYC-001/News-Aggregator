@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const UpdateFolderForm = ({ onClose }) => {
+const UpdateFolderForm = ({ onClose, folderId }) => {
     const apiPath = process.env.NEXT_PUBLIC_API_PATH;
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
@@ -117,11 +117,45 @@ const UpdateFolderForm = ({ onClose }) => {
       return { ...prevState, source_ids: Array.from(sourceIds) };
     });
   };
+  const handleUpdateFolder = async (event) => {
+    event.preventDefault();
+    const token = localStorage.getItem('token');
+    const queryParams = new URLSearchParams(newFolder);
 
+    const url = `${apiPath}/api/info/folder/update/${folderId}?${queryParams.toString()}`;
+    console.log(url)
+    try {
+      const response = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ source_ids: newFolder.source_ids }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      if (data.code === '000') {
+        alert('Folder updated successfully');
+        window.location.reload(false);
+        onClose();
+      } else {
+        alert(`Failed to update folder: ${data.message}`);
+      }
+    } catch (error) {
+      console.error('Error updating folder:', error);
+      alert('Error updating folder.');
+    }
+  };
+  
   return (
     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-8 border rounded shadow-lg w-full max-w-md">
-      <h2 className="text-xl mb-4 font-semibold text-gray-800">Add new folder</h2>
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <h2 className="text-xl mb-4 font-semibold text-gray-800">Update Folder</h2>
+      <form onSubmit={handleUpdateFolder} className="space-y-6">
         <div>
           <label htmlFor="title" className="block mb-2 text-sm font-medium text-gray-900">Title</label>
           <input
@@ -199,10 +233,10 @@ const UpdateFolderForm = ({ onClose }) => {
             Cancel
           </button>
           <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded inline-flex items-center"
+              type="submit"
+              className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded inline-flex items-center"
           >
-            Save Folder
+              Save Folder
           </button>
         </div>
       </form>
@@ -210,4 +244,4 @@ const UpdateFolderForm = ({ onClose }) => {
   );
 };
 
-export default NewFolderForm;
+export default UpdateFolderForm;

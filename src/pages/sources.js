@@ -5,6 +5,7 @@ import ArticleModal from '../components/ArticleModal';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import Sidebar from '../components/Sidebar';
 import NewFolderForm from '../components/NewFolderForm';
+import UpdateFolderForm from '../components/UpdateFolderForm';
 import DOMPurify from 'dompurify';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -20,10 +21,13 @@ export default function Sources() {
   const [selectedFeed, setSelectedFeed] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [showUpdateForm, setShowUpdateForm] = useState(false);
-
+  const [updatingFolderId, setUpdatingFolderId] = useState(null);
   const [selectedFolderSources, setSelectedFolderSources] = useState([]);
   const [selectedFolderId, setSelectedFolderId] = useState(null);
-
+  // Function to close the UpdateFolderForm
+  const closeUpdateForm = () => {
+    setShowUpdateForm(false);
+  };
   const createMarkup = (htmlContent) => {
     return { __html: DOMPurify.sanitize(htmlContent) };
   };
@@ -216,7 +220,11 @@ export default function Sources() {
       console.error('Error making API call:', error);
     }
   };
-
+  // Function to handle folder update request
+  const handleFolderUpdate = (folderId) => {
+    setUpdatingFolderId(folderId);
+    setShowUpdateForm(true);
+  };
 
   return (
     <div className="bg-gray-100 min-h-screen flex flex-col md:flex-row">
@@ -224,6 +232,7 @@ export default function Sources() {
         onSearch={handleSearch}
         currentPage="/sources"
         onAddNew={() => setShowForm(true)}
+        onUpdate={handleFolderUpdate}
         onPageChange={handlePageChange}
       />
 
@@ -318,6 +327,14 @@ export default function Sources() {
         {showForm && (
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md m-auto">
             <NewFolderForm onClose={() => setShowForm(false)} />
+          </div>
+        )}
+        {showUpdateForm && (
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md m-auto">
+            <UpdateFolderForm 
+            folderId={updatingFolderId}
+            onClose={closeUpdateForm}
+            />
           </div>
         )}
       </div>

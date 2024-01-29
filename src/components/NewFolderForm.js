@@ -91,6 +91,7 @@ const NewFolderForm = ({ onClose }) => {
       const data = await response.json();
       if (data.code === '000') {
         alert('Folder added successfully');
+        window.location.reload(false);
         onClose();
       } else {
         alert('Failed to add folder: ' + data.message);
