@@ -213,9 +213,21 @@ export default function Sources() {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      const data = await response.json();
-      // Handle the API response as needed
-      console.log('API response:', data);
+      const data = await response.json()
+      // console.log('bokurawa',data)
+      if (response.ok) {
+        //Trigger the file download
+        const url = data.url;  // Replace with your direct URL
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = data.filename;  // Set the desired filename
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      } else {
+        console.error('Failed to fetch data:', response.statusText);
+        // Handle error
+      }
     } catch (error) {
       console.error('Error making API call:', error);
     }
