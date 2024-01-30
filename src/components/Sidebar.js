@@ -6,19 +6,26 @@ import NewFolderForm from '../components/NewFolderForm';
 import UpdateFolderForm from '../components/UpdateFolderForm';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 async function addSourceToFolder(folderId, sourceId) {
-  console.log("folder id:" + folderId)
-  console.log("source id:" + sourceId)
-  const token = localStorage.getItem('token'); // Replace with your method of storing tokens
-  const apiPath = process.env.NEXT_PUBLIC_API_PATH; // Ensure you have the base URL set correctly
+  console.log("folder id:" + folderId);
+  console.log("source id:" + sourceId);
+  const token = localStorage.getItem('token');
+  const apiPath = process.env.NEXT_PUBLIC_API_PATH;
+
+  // Create a FormData instance
+  const formData = new FormData();
+  formData.append('folder_id', folderId);
+  // If multiple source IDs are expected, append each one.
+  // Here I'm assuming sourceId is a single value; if it's an array, you'll need to loop through it.
+  formData.append('source_id[]', sourceId);
 
   try {
     const response = await fetch(`${apiPath}/api/info/source/folder`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`, // Make sure the token is included in the authorization header
+        // 'Content-Type': 'multipart/form-data' is not needed; fetch sets it automatically
+        'Authorization': `Bearer ${token}`,
       },
-      body: JSON.stringify({ folderId, sourceId }),
+      body: formData,
     });
 
     if (!response.ok) {
@@ -35,6 +42,7 @@ async function addSourceToFolder(folderId, sourceId) {
     console.error('Error while adding source to folder:', error);
   }
 }
+
 const Sidebar = ({ currentPage, onAddNew, onPageChange, onUpdate }) => {
   const apiPath = process.env.NEXT_PUBLIC_API_PATH;
   const [inputValue, setInputValue] = useState('');
@@ -159,12 +167,13 @@ const Sidebar = ({ currentPage, onAddNew, onPageChange, onUpdate }) => {
   };
   
 
-  // Drop handler
-  const handleDrop = async (e, folder) => {
-    e.preventDefault();
-    const sourceId = e.dataTransfer.getData('text');
-    await addSourceToFolder(folder.id, sourceId);
-  };
+// Drop handler
+const handleDrop = async (e, folder) => {
+  e.preventDefault();
+  const sourceId = e.dataTransfer.getData('text');
+  await addSourceToFolder(folder.id, sourceId);
+};
+
 
   // Drag over handler
   const handleDragOver = (e) => {
@@ -207,16 +216,16 @@ const Sidebar = ({ currentPage, onAddNew, onPageChange, onUpdate }) => {
           </a>
         </Link>
         {/* Render the list of sources here */}
-        <ul className="my-4">
+        <ul className="my-4 overflow-y-auto max-h-[calc(100vh-12rem)]">
           {sources.map((source) => (
-            <div
+            <li
               key={source.id}
               draggable
               onDragStart={(e) => handleDragStart(e, source)}
-              className="py-1 hover:bg-blue-700 cursor-grab"
+              className="py-1 hover:bg-blue-700 cursor-pointer"
             >
               {source.title}
-            </div>
+            </li>
           ))}
         </ul>
         <div className='py-4 mt-8 bg-blue-500 rounded-xl'>
