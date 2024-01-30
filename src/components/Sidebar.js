@@ -6,24 +6,24 @@ import NewFolderForm from '../components/NewFolderForm';
 import UpdateFolderForm from '../components/UpdateFolderForm';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 async function addSourceToFolder(folderId, sourceId) {
-  console.log("folder id:" + folderId);
-  console.log("source id:" + sourceId);
   const token = localStorage.getItem('token');
   const apiPath = process.env.NEXT_PUBLIC_API_PATH;
 
-  // Create a FormData instance
+  // Create a FormData object and append the folderId and sourceId(s)
   const formData = new FormData();
   formData.append('folder_id', folderId);
-  // If multiple source IDs are expected, append each one.
-  // Here I'm assuming sourceId is a single value; if it's an array, you'll need to loop through it.
+  
+  // Since we are dealing with an array, even if it's one sourceId, 
+  // append it in an array format to comply with the expected server format
   formData.append('source_id[]', sourceId);
 
   try {
     const response = await fetch(`${apiPath}/api/info/source/folder`, {
       method: 'POST',
       headers: {
-        // 'Content-Type': 'multipart/form-data' is not needed; fetch sets it automatically
         'Authorization': `Bearer ${token}`,
+        // Do NOT set 'Content-Type' header when using FormData,
+        // fetch will set it along with the correct boundary
       },
       body: formData,
     });
@@ -32,16 +32,27 @@ async function addSourceToFolder(folderId, sourceId) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data = await response.json();
-    if (data.code === '000') {
-      console.log('Source added to folder successfully:', data);
-    } else {
-      console.error('Failed to add source to folder:', data.message);
+    // Check if the response is in JSON format or not
+    const text = await response.text();
+    try {
+      const data = JSON.parse(text);
+      if (data.code === '000') {
+        window.location.reload(false);
+        alert('Source(s) added to folder successfully:', data);
+        // Perform state update or UI changes here
+      } else {
+        console.error('Failed to add source(s) to folder:', data.message);
+      }
+    } catch (error) {
+      console.error('Error parsing server response:', error);
+      console.error('Server response:', text);
     }
   } catch (error) {
-    console.error('Error while adding source to folder:', error);
+    console.error('Error while adding source(s) to folder:', error);
   }
+  window.location.reload(false);
 }
+
 
 const Sidebar = ({ currentPage, onAddNew, onPageChange, onUpdate }) => {
   const apiPath = process.env.NEXT_PUBLIC_API_PATH;
@@ -167,12 +178,15 @@ const Sidebar = ({ currentPage, onAddNew, onPageChange, onUpdate }) => {
   };
   
 
-// Drop handler
+// Use the function in your drop handler like this
 const handleDrop = async (e, folder) => {
   e.preventDefault();
   const sourceId = e.dataTransfer.getData('text');
-  await addSourceToFolder(folder.id, sourceId);
+  // Ensure sourceId is sent as an array
+  await addSourceToFolder(folder.id, [sourceId]);
 };
+
+
 
 
   // Drag over handler
