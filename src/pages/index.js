@@ -303,6 +303,8 @@ export default function Sources() {
                   <p class="text-sm font-semibold leading-6 text-gray-900">{feed.title}</p>
                   <p class="mt-1 truncate text-xs leading-5 text-gray-500">{feed.description}</p>
                   <p class="mt-1 truncate text-xs leading-5 text-gray-500">Published on: {feed.pubdate}</p>
+                  <p class="mt-1 truncate text-xs leading-5 text-gray-500">Updated on: {feed.created_at}</p>
+
                 </li>
               ))}
             </ul>
