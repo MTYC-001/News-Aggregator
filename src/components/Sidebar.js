@@ -224,7 +224,7 @@ const handleDrop = async (e, folder) => {
         </form>
       </div>
       <nav className="flex flex-col flex-grow px-4">
-        <Link href="/sources">
+        <Link href="/">
           <a className={`block py-2 hover:bg-blue-700 transition-colors duration-200 ${currentPage === '/sources' ? 'bg-blue-700' : ''}`}>
             My Sources
           </a>
