@@ -303,24 +303,23 @@ useEffect(() => {
               </button>
             )}
 
-            <ul class="divide-y divide-gray-100">
+            <ul className="divide-y divide-blue-900">
               {feeds !== null && feeds.map((feed) => (
                 <li
-                  className={`gap-x-6 py-5 divide-red-600 
-                    ${(selectedFeedIds && selectedFeedIds.includes(feed.id)) || (selectedFeed && feed.id === selectedFeed.id) ? 'bg-blue-100' : ''}`}
                   key={feed.id}
-                  class="py-5 cursor-pointer"
-
+                  className={`py-5 cursor-pointer ${
+                    (selectedFeedIds && selectedFeedIds.includes(feed.id)) || (selectedFeed && feed.id === selectedFeed.id) ? 'bg-blue-100' : ''
+                  }`}
                   onClick={() => handleFeedClick(feed)}
                 >
-                  <p class="text-sm font-semibold leading-6 text-gray-900">{feed.title}</p>
-                  <p class="mt-1 truncate text-xs leading-5 text-gray-500">{feed.description}</p>
-                  <p class="mt-1 truncate text-xs leading-5 text-gray-500">Published on: {feed.pubdate}</p>
-                  <p class="mt-1 truncate text-xs leading-5 text-gray-500">Updated on: {feed.created_at}</p>
-
+                  <p className="text-sm font-semibold leading-6 text-gray-900">{feed.title}</p>
+                  <p className="mt-1 truncate text-xs leading-5 text-gray-500">{feed.description}</p>
+                  <p className="mt-1 truncate text-xs leading-5 text-gray-500">Published on: {feed.pubdate}</p>
+                  <p className="mt-1 truncate text-xs leading-5 text-gray-500">Updated on: {feed.created_at}</p>
                 </li>
               ))}
             </ul>
+
           </div>
 
           {selectedFeed &&
