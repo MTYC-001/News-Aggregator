@@ -24,6 +24,7 @@ export default function Sources() {
   const [updatingFolderId, setUpdatingFolderId] = useState(null);
   const [selectedFolderSources, setSelectedFolderSources] = useState([]);
   const [selectedFolderId, setSelectedFolderId] = useState(null);
+  const [selectedSourceFromSidebar, setSelectedSourceFromSidebar] = useState(null);
   // Function to close the UpdateFolderForm
   const closeUpdateForm = () => {
     setShowUpdateForm(false);
@@ -31,7 +32,18 @@ export default function Sources() {
   const createMarkup = (htmlContent) => {
     return { __html: DOMPurify.sanitize(htmlContent) };
   };
-
+// Function to handle the selected source from the sidebar
+const handleSourceSelectFromSidebar = (source) => {
+  setSelectedSourceFromSidebar(source); // Update the state with the selected source
+  fetchFeeds(source.id); // Fetch the feeds for the selected source
+  setSelectedFeed(null); // Reset the selected feed
+};
+// In the useEffect hook that fetches feeds, check if selectedSourceFromSidebar is set
+useEffect(() => {
+  if (selectedSourceFromSidebar) {
+    fetchFeeds(selectedSourceFromSidebar.id);
+  }
+}, [selectedSourceFromSidebar]);
   const handleSelectFolder = (folderSources) => {
     setSelectedFolderSources(folderSources);
   };
@@ -246,6 +258,7 @@ export default function Sources() {
         onAddNew={() => setShowForm(true)}
         onUpdate={handleFolderUpdate}
         onPageChange={handlePageChange}
+        onSourceSelect={handleSourceSelectFromSidebar}
       />
 
 
